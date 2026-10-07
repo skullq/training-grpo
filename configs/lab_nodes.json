@@ -1,0 +1,72 @@
+{
+  "clab_node_1": {
+    "host": "127.0.0.1",
+    "port": 2201,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  },
+  "clab_node_2": {
+    "host": "127.0.0.1",
+    "port": 2202,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  },
+  "clab_node_3": {
+    "host": "127.0.0.1",
+    "port": 2203,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  },
+  "clab_node_4": {
+    "host": "127.0.0.1",
+    "port": 2204,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  },
+  "clab_node_5": {
+    "host": "127.0.0.1",
+    "port": 2205,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  }
+}

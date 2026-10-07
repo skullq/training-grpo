@@ -84,49 +84,52 @@ class AsyncLabExecutor:
         await asyncio.sleep(0.1)  # 비동기 지연 시뮬레이션
         cmd_text = " ".join(commands).lower()
 
-        # 오류 명령어 시뮬레이션 (명시적 오류 키워드 또는 4096 배수가 아닌 비정상 priority 값)
-        if "invalid" in cmd_text or "error" in cmd_text or "priority 5000" in cmd_text:
+        # 오류 명령어 시뮬레이션
+        if "invalid" in cmd_text or "error" in cmd_text or "priority 5000" in cmd_text or "999999999" in cmd_text:
             return "% Invalid input detected at '^' marker.", ""
 
-        # 루트 브리지 설정 명령어 포함 여부 확인
-        if "spanning-tree vlan" in cmd_text and ("root primary" in cmd_text or "priority 0" in cmd_text or "priority 4096" in cmd_text):
-            mock_show = f"""
+        from src.interface_normalizer import normalize_interface_name, INTERFACE_REGEX
+        import re
+
+        # 명령어로부터 인터페이스 및 파라미터 추출
+        iface_match = INTERFACE_REGEX.search(" ".join(commands))
+        active_iface_short = normalize_interface_name(iface_match.group(0), short=True) if iface_match else "Et0/0"
+        
+        # 기본 포트 상태
+        cost_val = "19"
+        prio_val = "128"
+
+        cost_match = re.search(r"cost\s+(\d+)", cmd_text)
+        if cost_match:
+            cost_val = cost_match.group(1)
+
+        prio_match = re.search(r"port-priority\s+(\d+)", cmd_text)
+        if prio_match:
+            prio_val = prio_match.group(1)
+
+        is_root_set = ("spanning-tree vlan" in cmd_text and ("root primary" in cmd_text or "priority 0" in cmd_text or "priority 4096" in cmd_text))
+        
+        root_str = "This bridge is the root" if is_root_set else "Address     5000.0002.0000"
+        bridge_prio = "4096" if is_root_set else "32768"
+
+        mock_show = f"""
 VLAN0001
   Spanning tree enabled protocol rstp
-  Root ID    Priority    4096
-             Address     5000.0001.0000
-             This bridge is the root
+  Root ID    Priority    {bridge_prio}
+             {root_str}
              Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
 
-  Bridge ID  Priority    4096
+  Bridge ID  Priority    {bridge_prio}
              Address     5000.0001.0000
              Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
              Aging Time  300 sec
 
 Interface           Role Sts Cost      Prio.Nbr Type
 ------------------- ---- --- --------- -------- --------------------------------
-Gi0/1               Desg FWD 4         128.1    P2p
-Gi0/2               Desg FWD 4         128.2    P2p
+{active_iface_short:<19} Desg FWD {cost_val:<9} {prio_val}.1    P2p
+Et0/1               Altn BLK 19        128.2    P2p
 """
-            return "Configuration applied successfully.", mock_show
-        else:
-            # 다른 브리지가 루트인 경우
-            mock_show = """
-VLAN0001
-  Spanning tree enabled protocol rstp
-  Root ID    Priority    32768
-             Address     5000.0002.0000
-             Cost        4
-             Port        1 (GigabitEthernet0/1)
-
-  Bridge ID  Priority    32768
-             Address     5000.0001.0000
-Interface           Role Sts Cost      Prio.Nbr Type
-------------------- ---- --- --------- -------- --------------------------------
-Gi0/1               Root FWD 4         128.1    P2p
-Gi0/2               Altn BLK 4         128.2    P2p
-"""
-            return "Configuration applied successfully.", mock_show
+        return "Configuration applied successfully.", mock_show
 
     async def run_parallel_injections(
         self,

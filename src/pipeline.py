@@ -31,8 +31,20 @@ class GRPODatasetPipeline:
         self.evaluator = evaluator
         self.executor = AsyncLabExecutor(lab_nodes, dry_run=dry_run)
 
+    def _get_common_interface_map(self) -> Dict[str, str]:
+        """랩 노드 설정들로부터 대표 interface_map 반환"""
+        for node in self.lab_nodes.values():
+            if node.interface_map:
+                return node.interface_map
+        return {}
+
     async def process_scenario(self, scenario: Scenario, candidate_count: int = 4) -> GRPOScenarioRecord:
         """단일 시나리오 처리 (생성 -> 랩 병렬 주입 -> 채점 -> Relative Advantage 계산)"""
+        # 0. 랩 노드 인터페이스 매핑 적용
+        iface_map = self._get_common_interface_map()
+        if iface_map:
+            scenario = scenario.with_interface_map(iface_map)
+
         logger.info(f"Processing Scenario: {scenario.scenario_id} - {scenario.task_description}")
 
         # 1. Action 후보군 생성 (G=4~5)

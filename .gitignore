@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+.venv/
+venv/
+ENV/
+
+# Output Datasets & Logs
+data/grpo_dataset.jsonl
+*.log
+
+# Local configs with passwords (optional local override)
+configs/lab_nodes.local.json
+.env

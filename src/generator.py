@@ -117,35 +117,81 @@ Expected Root: {scenario.expected_root_node}
         return candidates
 
     def _mock_generate(self, scenario: Scenario, count: int) -> List[CandidateAction]:
-        """사용자가 제시한 현실적인 GRPO 평가 후보군"""
+        """사용자가 제시한 시나리오 및 인터페이스에 맞춘 현실적인 GRPO 평가 후보군 생성"""
         vlan = scenario.vlan_id
+        base_cmds = scenario.baseline_commands if scenario.baseline_commands else [f"spanning-tree vlan {vlan} priority 4096"]
+
+        # 1. 정답 후보 (Baseline 정확한 명령어)
+        cand1_cmds = list(base_cmds)
+        cand1_resp = "\n".join(cand1_cmds)
+        cand1_think = f"{scenario.task_description} 요구사항에 맞게 최적의 설정을 적용합니다."
+
+        # 2. 대안 / 축약형 또는 다른 방식의 유효 후보
+        from src.interface_normalizer import normalize_interface_name
+        cand2_cmds = []
+        for cmd in base_cmds:
+            if "interface " in cmd:
+                # 인터페이스 축약형 (예: interface Ethernet0/0 -> interface Et0/0)
+                parts = cmd.split(maxsplit=1)
+                short_if = normalize_interface_name(parts[1], short=True)
+                cand2_cmds.append(f"interface {short_if}")
+            elif "priority 4096" in cmd:
+                cand2_cmds.append(f"spanning-tree vlan {vlan} root primary")
+            else:
+                cand2_cmds.append(cmd)
+        if cand2_cmds == cand1_cmds:
+            # 루트 변경 시 대안 매크로
+            cand2_cmds = [f"spanning-tree vlan {vlan} root primary"] if not any("interface" in c for c in cand1_cmds) else cand1_cmds
+
+        cand2_resp = "\n".join(cand2_cmds)
+        cand2_think = f"대안 또는 축약형 명령어를 적용하여 구성을 완료합니다."
+
+        # 3. 문법 오류 후보 (허용 범위를 벗어난 파라미터 등)
+        cand3_cmds = []
+        for cmd in base_cmds:
+            if "priority" in cmd:
+                cand3_cmds.append(re.sub(r"priority\s+\d+", "priority 5000", cmd))
+            elif "cost" in cmd:
+                cand3_cmds.append(re.sub(r"cost\s+\d+", "cost 999999999", cmd))
+            else:
+                cand3_cmds.append(cmd + " invalid_param")
+        if not cand3_cmds:
+            cand3_cmds = [f"spanning-tree vlan {vlan} priority 5000"]
+        cand3_resp = "\n".join(cand3_cmds)
+        cand3_think = f"파라미터 규격을 지키지 않아 CLI 구문 분석 에러가 발생합니다."
+
+        # 4. 포맷 오류 후보 (CLI 대신 자연어)
+        cand4_cmds = []
+        cand4_resp = f"{scenario.target_node} 장비에 {scenario.task_description} 구성을 완료했습니다."
+        cand4_think = f"CLI 명령어 블록 대신 설명 텍스트만 출력합니다 (형식 오류)."
+
         mock_list = [
             CandidateAction(
                 candidate_id=1,
-                thinking=f"VLAN {vlan}의 우선순위를 4096으로 변경하여 루트 역할을 확실히 획득합니다.",
-                commands=[f"spanning-tree vlan {vlan} priority 4096"],
-                raw_response=f"spanning-tree vlan {vlan} priority 4096",
+                thinking=cand1_think,
+                commands=cand1_cmds,
+                raw_response=cand1_resp,
                 is_format_error=False
             ),
             CandidateAction(
                 candidate_id=2,
-                thinking=f"Cisco 전용 root primary 매크로 명령어를 활용합니다.",
-                commands=[f"spanning-tree vlan {vlan} root primary"],
-                raw_response=f"spanning-tree vlan {vlan} root primary",
+                thinking=cand2_think,
+                commands=cand2_cmds,
+                raw_response=cand2_resp,
                 is_format_error=False
             ),
             CandidateAction(
                 candidate_id=3,
-                thinking=f"우선순위를 5000으로 시도합니다 (4096 배수가 아니어서 문법 에러 발생).",
-                commands=[f"spanning-tree vlan {vlan} priority 5000"],
-                raw_response=f"spanning-tree vlan {vlan} priority 5000",
+                thinking=cand3_think,
+                commands=cand3_cmds,
+                raw_response=cand3_resp,
                 is_format_error=False
             ),
             CandidateAction(
                 candidate_id=4,
-                thinking=f"명령어 대신 설명 텍스트만 출력합니다 (형식 위반).",
-                commands=[],
-                raw_response=f"{scenario.target_node}을 루트 브리지로 변경했습니다.",
+                thinking=cand4_think,
+                commands=cand4_cmds,
+                raw_response=cand4_resp,
                 is_format_error=True
             ),
         ]

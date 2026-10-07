@@ -3,7 +3,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from src.config import LabNode, Scenario
+from src.config import LabNode, Scenario, load_lab_nodes
 from src.generator import ActionGenerator
 from src.evaluator import SpanningTreeEvaluator
 from src.pipeline import GRPODatasetPipeline
@@ -29,7 +29,8 @@ async def main():
     parser = argparse.ArgumentParser(description="GRPO Network Data Collection Pipeline")
     parser.add_argument("--scenarios", type=str, default="data/sample_scenarios.json", help="Path to scenarios JSON file")
     parser.add_argument("--output", type=str, default="data/grpo_dataset.jsonl", help="Path to output JSONL file")
-    parser.add_argument("--lab-count", type=int, default=5, help="Number of virtual labs (default: 5)")
+    parser.add_argument("--labs-config", type=str, default="configs/lab_nodes.json", help="Path to lab nodes config file")
+    parser.add_argument("--lab-count", type=int, default=5, help="Number of virtual labs if no config file (default: 5)")
     parser.add_argument("--candidate-count", type=int, default=5, help="Number of candidate actions per scenario (default: 5)")
     parser.add_argument("--dry-run", action="store_true", default=True, help="Run simulation mode without live Containerlab")
     parser.add_argument("--live", action="store_true", help="Connect to actual Containerlab instances")
@@ -48,7 +49,13 @@ async def main():
     scenarios = [Scenario(**s) for s in raw_scenarios]
 
     # 2. 컴포넌트 초기화
-    labs = build_default_lab_nodes(count=args.lab_count)
+    labs_config_path = Path(args.labs_config)
+    if labs_config_path.exists():
+        print(f"[Config] 랩 접속정보 파일 로드: {labs_config_path.resolve()}")
+        labs = load_lab_nodes(labs_config_path)
+    else:
+        print(f"[Config] 랩 설정 파일({args.labs_config})이 없어 기본값({args.lab_count}개)으로 생성합니다.")
+        labs = build_default_lab_nodes(count=args.lab_count)
     generator = ActionGenerator()
     evaluator = SpanningTreeEvaluator(
         success_reward=200.0,

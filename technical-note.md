@@ -125,15 +125,56 @@ $$A_i = \frac{R_i - \text{mean}(R)}{\text{std}(R) + \epsilon}$$
 
 ---
 
-## 5. `uv` 환경 관리 및 실행 명령어
+## 5. 가변 인터페이스 동적 매핑 및 접속정보 분리 아키텍처
+
+네트워크 테스트베드와 가상화 플랫폼(Cisco IOL, CSR1000v, c8000v, Arista vEOS 등)은 인터페이스 명명 체계가 서로 다릅니다. 파이프라인은 원본 시나리오 데이터를 수정하지 않고도 실행 환경에 맞춰 동적으로 인터페이스를 매핑 및 검증할 수 있는 아키텍처를 제공합니다.
+
+### 5.1 랩 접속 프로파일 분리 (`configs/lab_nodes.json`)
+- 독립된 설정 파일에서 각 가상 노드의 IP, SSH 포트, 계정 정보 및 노드별 인터페이스 매핑 테이블을 관리합니다.
+```json
+{
+  "clab_node_1": {
+    "host": "127.0.0.1",
+    "port": 2201,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Port-Channel0"
+    }
+  }
+}
+```
+
+### 5.2 3단계 가변 인터페이스 처리 파이프라인
+```
+[1. 시나리오 동적 치환]
+   - 파이프라인 시작 시 interface_map을 적용하여 Scenario의 프롬프트와 baseline_commands를
+     사용자 환경(Ethernet0/0, Port-Channel0 등)으로 자동 변환
+
+[2. 인터페이스 정규화기 (src/interface_normalizer.py)]
+   - 모델 생성물 및 CLI 출력의 축약형(Et0/0, Po0, Gi0/1)과 정규형(Ethernet0/0, Port-Channel0) 상호 호환 보장
+   - build_interface_regex_pattern()을 통해 장비 CLI 출력 형식에 무관하게 정규식 패턴 자동 매칭
+
+[3. 유연한 상태 검증 (src/evaluator.py)]
+   - 루트 브리지뿐만 아니라 포트별 Cost, Port Priority, Guard 설정 여부를
+     show spanning-tree 출력 테이블에서 정규식으로 정밀 판정 (+200, 0, -150, -200)
+```
+
+---
+
+## 6. `uv` 환경 관리 및 실행 명령어
 
 ```bash
 # 가상환경 동기화 및 패키지 설치
 uv pip install "scrapli<=2024.7.30" asyncssh numpy pydantic openai rich
 
-# 시뮬레이션 모드 (40개 시나리오 일괄 수집 및 검증)
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --lab-count 4 --candidate-count 4 --dry-run
+# 시뮬레이션 모드 (외부 접속정보 파일 지정 및 40개 시나리오 수집)
+uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --dry-run
 
 # 실제 Containerlab 환경 연결 모드
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --lab-count 4 --candidate-count 4 --live
+uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --live
 ```

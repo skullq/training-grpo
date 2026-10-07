@@ -16,13 +16,15 @@
 uv pip install "scrapli<=2024.7.30" asyncssh numpy pydantic openai rich
 
 # 2. 파이프라인 실행 (시뮬레이션 모드)
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --lab-count 4 --candidate-count 4 --dry-run
+uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --dry-run
 ```
 
 ## 📁 디렉토리 구조
 - `.agents/skills/grpo-network-collector/`: 안티그래비티 전용 Skill 문서
+- `configs/`:
+  - `lab_nodes.json`: Containerlab 인스턴스 접속 정보(호스트, 포트, 인증정보, 플랫폼 등)
 - `src/`:
-  - `config.py`: 데이터 모델 규격
+  - `config.py`: 데이터 모델 규격 및 랩 노드 로더 (`load_lab_nodes`)
   - `generator.py`: LLM 후보군 생성기 (Mock 및 OpenAI 호환)
   - `async_executor.py`: Scrapli 비동기 랩 연결 및 명령어 실행기
   - `evaluator.py`: CLI 출력 검증 및 보상 채점기
