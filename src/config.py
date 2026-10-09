@@ -27,6 +27,8 @@ class Scenario:
     expected_root_node: str = "SW1"
     baseline_commands: List[str] = field(default_factory=list)
     target_interface: Optional[str] = None
+    verify_command: Optional[str] = None
+    convergence_wait_seconds: Optional[float] = None
 
     def with_interface_map(self, interface_map: Dict[str, str]) -> "Scenario":
         """지정된 interface_map에 따라 프롬프트 설명 및 baseline 명령어를 치환한 새로운 Scenario 반환"""
@@ -37,6 +39,7 @@ class Scenario:
         new_state = apply_interface_mapping_to_text(self.current_state, interface_map)
         new_cmds = apply_interface_mapping_to_commands(self.baseline_commands, interface_map)
         new_iface = apply_interface_mapping_to_text(self.target_interface or "", interface_map) if self.target_interface else None
+        new_verify = apply_interface_mapping_to_text(self.verify_command or "", interface_map) if self.verify_command else None
         return Scenario(
             scenario_id=self.scenario_id,
             task_description=new_desc,
@@ -45,7 +48,9 @@ class Scenario:
             current_state=new_state,
             expected_root_node=self.expected_root_node,
             baseline_commands=new_cmds,
-            target_interface=new_iface or self.target_interface
+            target_interface=new_iface or self.target_interface,
+            verify_command=new_verify or self.verify_command,
+            convergence_wait_seconds=self.convergence_wait_seconds
         )
 
 

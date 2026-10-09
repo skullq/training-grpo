@@ -1,0 +1,125 @@
+================================================================================
+GRPO 네트워크 자동화 모델 학습 및 데이터셋 확장 TODO LIST
+================================================================================
+생성일시: 2026-10-08 (최종 업데이트: 2026-10-09)
+프로젝트: Spanning-Tree Protocol (STP) 강화학습(GRPO) 및 3B 모델 LoRA 파인튜닝
+
+--------------------------------------------------------------------------------
+1. L2 트렁크(Trunk) 포트 및 802.1Q 캡슐화 시나리오 구축 [완료]
+--------------------------------------------------------------------------------
+[x] 802.1Q 트렁크 모드 전환 시나리오 추가
+    - interface 단위 `switchport mode trunk`
+[x] VLAN 트렁크 허용 리스트(Allowed VLAN) 필터링 시나리오
+    - `switchport trunk allowed vlan 10,20,30`
+[x] Native VLAN 변경 및 보안 시나리오
+    - `switchport trunk native vlan 99`
+[x] DTP 네고시에이션 차단 시나리오
+    - `switchport nonegotiate`
+[x] 트렁크 포트 롤백(Rollback / Unset) 시나리오
+    - `switchport mode access`
+    - `no switchport trunk allowed vlan`
+    - `no switchport trunk native vlan`
+    - `no switchport nonegotiate`
+
+--------------------------------------------------------------------------------
+2. 최신 STP 포트 타입 (type edge / network / Bridge Assurance) 시나리오 구축 [완료]
+--------------------------------------------------------------------------------
+[x] PortFast Edge (단말 포트) 현대 표준 문법 데이터셋 추가
+    - 인터페이스: `spanning-tree portfast edge`
+[x] PortFast Network (스위치 간 트렁크 / Bridge Assurance) 시나리오 추가
+    - 인터페이스: `spanning-tree portfast network`
+    - 전역(Global): `spanning-tree portfast network default`
+    - 단방향 링크 장애 및 블랙홀 방지 메커니즘 학습
+[x] 포트 속성 원복(Rollback) 시나리오
+    - `spanning-tree portfast normal` (기본 포트 복원)
+    - `no spanning-tree portfast network`
+    - `no spanning-tree portfast network default`
+[x] P2P / Shared 링크 타입 명시 시나리오
+    - `spanning-tree link-type point-to-point`
+    - 원복: `no spanning-tree link-type`
+
+--------------------------------------------------------------------------------
+3. 대규모 다계층(Multi-tier / Multi-hop) 스위치 토폴로지 확장 [완료]
+--------------------------------------------------------------------------------
+[x] 6~8대 스위치 다계층 이중화 통합 랩 구축 (`labs/iol-multitier-integration.clab.yml`)
+    - Core 2대(core-sw1, core-sw2) - Distribution 2대(dist-sw1, dist-sw2) - Access 2대(acc-sw1, acc-sw2)
+    - Core 간 LACP 번들(Po1), Dist 간 번들(Po2), Dual-homed 업링크 및 Cross-connect 메시 배선
+    - 접속 설정: `configs/lab_nodes_integration.json`
+[x] 다계층 통합 시나리오 30개 추가 구축 및 통합 (`data/grpo_scenario_multitier_150.json`)
+    - Core Root Primary/Secondary 이중화 및 Per-VLAN 로드밸런싱
+    - Multi-hop 누적 Root Path Cost 계산 및 다운스트림 포트 우선순위(Port-Priority) 튜닝
+    - Access 계층 Root Guard / Loop Guard / BPDU Guard 및 TCN 억제(Edge) 시나리오
+    - Multi-tier MST Region 및 Instance 1/2 분할 선출
+
+--------------------------------------------------------------------------------
+4. 고품질 GRPO 데이터셋 생성 체계 및 프롬프트 3대 축 다양성 구축 [완료]
+--------------------------------------------------------------------------------
+[x] 프롬프트 표현 3대 축 다양화 (Prompt Diversity)
+    - 목표/트래픽 지향형 (Goal-oriented: "VLAN 10 트래픽을 Core-1에 집중해라")
+    - 보안/장애 대응형 (Troubleshooting/Defense: "비인가 스위치의 루트 탈취를 방어해라")
+    - 롤백 및 원복형 (Rollback/Cleanup: "설정된 Cost/우선순위를 초기화해라")
+[x] 네트워크 엔지니어링 4단계 체계적 CoT(Chain-of-Thought, <think>) 추론 주입
+    - [1. 토폴로지/상태 분석 -> 2. 파라미터/타이브레이커 계산 -> 3. 영향도(Blast Radius) 검토 -> 4. 명령어 도출]
+    - `src/generator.py` 프롬프트 및 Mock 추론기 전면 고도화
+[x] GRPO 품질 게이트(Quality Gate Pruning) 탑재 (`src/pipeline.py`)
+    - 보상 분산 sigma > 0 유효 신호 보장 및 정답률(20~50%) 균형 엄선 저장
+    - `run_collection.py`에 `--topology (unit | multitier)` 및 `--filter-quality` 플래그 연동
+[x] 총 150개 시나리오 (600 롤아웃) 검증 완료: `data/grpo_dataset_multitier_150.jsonl`
+
+--------------------------------------------------------------------------------
+5. MSTP (Multiple Spanning Tree) 및 고난도 엔터프라이즈 기능 시나리오 [완료]
+--------------------------------------------------------------------------------
+[x] MST Region 설정 시나리오
+    - `spanning-tree mst configuration`, `name REGION1`, `revision 1`
+[x] MST Instance 매핑 시나리오
+    - `instance 1 vlan 10,20`
+[x] MST 인스턴스별 루트 브리지 분산 및 로드 밸런싱
+    - `spanning-tree mst 1 root primary`
+    - `spanning-tree mst 2 priority 4096`
+[x] MST 롤백 시나리오
+    - `no instance 1 vlan 10,20`, `no name`, `no spanning-tree mst 2 priority`
+    - `spanning-tree mode rapid-pvst` (모드 원복)
+[x] 고속 링크용 32-bit Path Cost 모드 및 원복
+    - `spanning-tree pathcost method long` / `short`
+[x] Errdisable 자동 복구 시나리오 및 원복
+    - `errdisable recovery cause bpduguard` / `interval 120` 및 no 원복
+
+--------------------------------------------------------------------------------
+6. 검증기(Evaluator) 및 파이프라인 기능 고도화 [완료]
+--------------------------------------------------------------------------------
+[x] Scenario 모델 확장: `verify_command` 필드 추가 (src/config.py)
+[x] src/pipeline.py 동적 검증 명령어 주입 지원
+[x] src/evaluator.py 상태 검증기 대폭 확장
+    - `show interfaces trunk` 트렁크 및 Allowed VLAN 검증
+    - `show spanning-tree interface detail` Edge / Network (Bridge Assurance) / P2P 검증
+    - `show etherchannel summary` Port-Channel 번들링 검증
+    - `show spanning-tree mst configuration` MST Region / Instance 검증
+    - `show errdisable recovery` 및 `show spanning-tree summary` 검증
+[x] src/async_executor.py 검증 명령어별 정밀 모의 응답(Mock Response) 구현
+
+--------------------------------------------------------------------------------
+7. 토폴로지 안정화 및 프로토콜 수렴(Convergence) 최적화 [완료]
+--------------------------------------------------------------------------------
+[x] 시나리오별 가변 수렴 대기시간(`convergence_wait_seconds`) 모델 및 데이터셋 구축
+    - `src/config.py`: `Scenario` 데이터클래스에 `convergence_wait_seconds` 필드 추가
+    - `data/grpo_initial_scenario_120.json`:
+      * 802.1D 레거시 PVST+ 전환: 32초 (Listening 15s + Learning 15s + 마진)
+      * MSTP Region/Instance 전환: 7초
+      * Port-Channel 번들 형성 및 Rapid-PVST+ 모드 원복: 4초
+      * 일반 RSTP 포트/우선순위 변경: 3초
+[x] `src/pipeline.py` 가변 대기시간 및 명령어 패턴 기반 자동 폴백 판별 로직 적용
+[x] `src/async_executor.py` 동적 수렴 감지(Dynamic Convergence Polling) 및 조기 탈출 구현
+    - 과도기 상태(Listening / Learning / LIS / LRN) 감지 시 1초 주기 연속 검증
+    - 완전 수렴(FWD / BLK) 정착 시 대기시간 만료 전 조기 탈출(Early Exit)로 수집 지연 최소화
+
+--------------------------------------------------------------------------------
+8. GPU 서버 LoRA 파인튜닝 가이드 문서화 및 핸드오버 [완료]
+--------------------------------------------------------------------------------
+[x] 공식 기술 가이드 문서 구축: `docs/GRPO_LORA_TRAINING_GUIDE.md`
+    - 파이프라인 아키텍처 및 지금까지 적용된 7대 핵심 구현 요약
+    - 3B 모델(Qwen2.5-3B, Llama-3.2-3B) LoRA 하이퍼파라미터 권장값
+    - Hugging Face TRL 기반 GRPOTrainer 학습 스크립트 템플릿
+    - 최종 데이터셋 품질 지표 (150 시나리오, 600 롤아웃, 100% sigma > 0)
+    - 향후 고도화 로드맵 (자연어 패러프레이징, G=8 확장, 물리 결함 주입)
+[x] `README.md` 진입점 및 빠른 실행 명령어 갱신
+

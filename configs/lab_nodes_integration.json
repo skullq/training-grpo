@@ -1,0 +1,86 @@
+{
+  "core-sw1": {
+    "host": "192.168.100.101",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  },
+  "core-sw2": {
+    "host": "192.168.100.102",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  },
+  "dist-sw1": {
+    "host": "192.168.100.103",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  },
+  "dist-sw2": {
+    "host": "192.168.100.104",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  },
+  "acc-sw1": {
+    "host": "192.168.100.105",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  },
+  "acc-sw2": {
+    "host": "192.168.100.106",
+    "port": 22,
+    "auth_username": "admin",
+    "auth_password": "admin",
+    "auth_strict_key": false,
+    "platform": "cisco_iosxe",
+    "interface_map": {
+      "Gi0/1": "Ethernet0/0",
+      "Gi0/2": "Ethernet0/1",
+      "Gi0/3": "Ethernet0/2",
+      "Gi0/4": "Ethernet0/3"
+    }
+  }
+}

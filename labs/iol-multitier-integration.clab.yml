@@ -1,0 +1,75 @@
+name: iol-multitier-integration
+
+mgmt:
+  network: mgmt-grpo-integration
+  ipv4-subnet: 192.168.100.0/24
+
+topology:
+  nodes:
+    # Core Tier (2 Nodes)
+    core-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.101
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2211:22"
+    core-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.102
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2212:22"
+
+    # Distribution Tier (2 Nodes)
+    dist-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.103
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2213:22"
+    dist-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.104
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2214:22"
+
+    # Access Tier (2 Nodes)
+    acc-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.105
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2215:22"
+    acc-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.106
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports:
+        - "2216:22"
+
+  links:
+    # Core Interconnect (Port-Channel 1 번들용 이중 링크)
+    - endpoints: ["core-sw1:eth0/0", "core-sw2:eth0/0"]
+    - endpoints: ["core-sw1:eth0/1", "core-sw2:eth0/1"]
+
+    # Core to Distribution Links (Cross-connect Mesh)
+    - endpoints: ["core-sw1:eth0/2", "dist-sw1:eth0/0"]
+    - endpoints: ["core-sw1:eth0/3", "dist-sw2:eth0/0"]
+    - endpoints: ["core-sw2:eth0/2", "dist-sw1:eth0/1"]
+    - endpoints: ["core-sw2:eth0/3", "dist-sw2:eth0/1"]
+
+    # Distribution Interconnect (Port-Channel 2 번들용)
+    - endpoints: ["dist-sw1:eth0/2", "dist-sw2:eth0/2"]
+
+    # Distribution to Access Links (Dual-homed Uplinks)
+    - endpoints: ["dist-sw1:eth0/3", "acc-sw1:eth0/0"]
+    - endpoints: ["dist-sw2:eth0/3", "acc-sw1:eth0/1"]
+    - endpoints: ["dist-sw1:eth1/0", "acc-sw2:eth0/0"]
+    - endpoints: ["dist-sw2:eth1/0", "acc-sw2:eth0/1"]

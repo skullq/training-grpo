@@ -9,27 +9,34 @@
 - **표준 JSONL 저장**: GRPO 학습셋 형식으로 즉시 활용 가능하도록 레코드 저장.
 - **`uv` 환경 관리**: 빠르고 가벼운 파이썬 환경 격리.
 
-## 🛠️ 빠른 시작 (Quick Start with uv)
+## 📖 GPU 서버 LoRA 파인튜닝 가이드
+- **[공식 훈련 가이드 문서 (docs/GRPO_LORA_TRAINING_GUIDE.md)](docs/GRPO_LORA_TRAINING_GUIDE.md)**: 3B 모델(Qwen2.5-3B, Llama-3.2-3B) LoRA 하이퍼파라미터 권장값, TRL 학습 스크립트 예시, 데이터셋 구조 분석 수록.
+
+## 🛠️ 빠른 시작 (Quick Start)
 
 ```bash
-# 1. 의존성 설치
-uv pip install "scrapli<=2024.7.30" asyncssh numpy pydantic openai rich
+# 1. 단위 랩 (Unit Test 3-node) 모드 실행 (120 시나리오)
+uv run python run_collection.py --topology unit --candidate-count 4 --dry-run
 
-# 2. 파이프라인 실행 (시뮬레이션 모드)
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --dry-run
+# 2. 다계층 통합 랩 (Multi-tier Redundant) 모드 실행 (150 시나리오, 권장)
+uv run python run_collection.py --topology multitier --candidate-count 4 --dry-run
 ```
 
 ## 📁 디렉토리 구조
-- `.agents/skills/grpo-network-collector/`: 안티그래비티 전용 Skill 문서
+- `docs/`:
+  - `GRPO_LORA_TRAINING_GUIDE.md`: GPU 서버 파인튜닝 가이드 및 기술 아키텍처 문서
 - `configs/`:
-  - `lab_nodes.json`: Containerlab 인스턴스 접속 정보(호스트, 포트, 인증정보, 플랫폼 등)
+  - `lab_nodes_8.json`: 3-Node 단위 랩 8개 인스턴스 접속 정보
+  - `lab_nodes_integration.json`: 6대 다계층 통합 랩 접속 정보
+- `labs/`:
+  - `iol-8labs-24sw.clab.yml`: 24대 Cisco IOL 컨테이너랩 토폴로지
+  - `iol-multitier-integration.clab.yml`: Core-Dist-Access 이중화 메시 토폴로지
 - `src/`:
-  - `config.py`: 데이터 모델 규격 및 랩 노드 로더 (`load_lab_nodes`)
-  - `generator.py`: LLM 후보군 생성기 (Mock 및 OpenAI 호환)
-  - `async_executor.py`: Scrapli 비동기 랩 연결 및 명령어 실행기
-  - `evaluator.py`: CLI 출력 검증 및 보상 채점기
-  - `advantage.py`: GRPO 상대 우위 계산 로직
-  - `pipeline.py`: 시나리오 일괄 처리 및 JSONL 스트리밍 저장
+  - `generator.py`: 4단계 CoT 추론 지원 액션 생성기
+  - `async_executor.py`: 동적 수렴 감지(Dynamic Convergence Polling) Scrapli 비동기 주입기
+  - `evaluator.py`: L2 Trunk / MSTP / Port-Channel 정밀 CLI 채점기
+  - `pipeline.py`: GRPO 품질 게이트(sigma > 0) 및 데이터 수집 파이프라인
 - `data/`:
-  - `sample_scenarios.json`: STP 기초 시나리오 예제
-  - `grpo_dataset.jsonl`: 생성된 최종 GRPO 데이터셋
+  - `grpo_scenario_multitier_150.json`: 150개 최종 시나리오
+  - `grpo_dataset_multitier_150.jsonl`: 3B LoRA 학습용 최종 데이터셋
+

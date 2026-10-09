@@ -71,7 +71,7 @@ def normalize_interface_name(iface: str, short: bool = False) -> str:
 
 
 def build_interface_regex_pattern(iface: str) -> str:
-    """주어진 인터페이스(예: 'Ethernet0/0' 또는 'Et0/0')에 대해
+    r"""주어진 인터페이스(예: 'Ethernet0/0' 또는 'Et0/0')에 대해
     CLI 출력(축약형/전체형/공백 유무)을 모두 매칭할 수 있는 정규식 패턴 생성
     
     예: 'Ethernet0/0' -> r'(?:Ethernet|Et|eth)\s*0/0'

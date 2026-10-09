@@ -62,13 +62,37 @@ class AsyncLabExecutor:
                 config_response = await conn.send_configs(commands)
                 injection_output = config_response.result
 
-                # 2. 프로토콜 수렴(Convergence) 대기
-                # Rapid-PVST / RSTP의 경우 1~3초 내 수렴
-                await asyncio.sleep(wait_seconds)
+                # 2. 동적 프로토콜 수렴(Dynamic Convergence Polling)
+                # 초기 최소 안정화 대기 (1.5초 또는 wait_seconds 중 작은 값)
+                initial_wait = min(1.5, wait_seconds)
+                await asyncio.sleep(initial_wait)
+                remaining_wait = max(0.0, wait_seconds - initial_wait)
 
-                # 3. 상태 검증 명령어 실행 (show spanning-tree 등)
+                # 상태 검증 명령어 첫 실행
                 verify_response = await conn.send_command(verify_cmd)
                 verification_output = verify_response.result
+
+                # 3. 과도기 상태(Listening / Learning / LIS / LRN) 감지 시 동적 폴링
+                transitional_keywords = ["lis", "lrn", "listening", "learning"]
+                poll_interval = 1.0
+                elapsed = 0.0
+
+                def is_transitional(output_str: str) -> bool:
+                    lines = output_str.lower().splitlines()
+                    for line in lines:
+                        if any(kw in line for kw in transitional_keywords):
+                            return True
+                    return False
+
+                # 과도기 상태가 사라지고 완전 수렴(FWD/BLK 등)될 때까지 최대 대기시간 내에서 1초 주기 폴링
+                while remaining_wait > 0 and elapsed < remaining_wait:
+                    if not is_transitional(verification_output):
+                        # 이미 안정 상태로 수렴 완료 -> 조기 탈출 (Early Exit)
+                        break
+                    await asyncio.sleep(poll_interval)
+                    elapsed += poll_interval
+                    verify_response = await conn.send_command(verify_cmd)
+                    verification_output = verify_response.result
 
         except Exception as e:
             logger.error(f"[{lab_id}] Connection or execution error: {e}")
@@ -112,7 +136,65 @@ class AsyncLabExecutor:
         root_str = "This bridge is the root" if is_root_set else "Address     5000.0002.0000"
         bridge_prio = "4096" if is_root_set else "32768"
 
-        mock_show = f"""
+        # 검증 명령어 유형에 따른 맞춤형 모의 show 출력 생성
+        verify_cmd_lower = verify_cmd.lower()
+
+        if "trunk" in verify_cmd_lower:
+            mock_show = f"""
+Port        Mode             Encapsulation  Status        Native vlan
+{active_iface_short:<11} on               802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+{active_iface_short:<11} 1-4094
+
+Port        Vlans allowed and active in management domain
+{active_iface_short:<11} 10,20,30,40,100
+
+Port        Vlans in spanning tree forwarding state and not pruned
+{active_iface_short:<11} 10,20,30,40,100
+"""
+        elif "detail" in verify_cmd_lower:
+            is_edge = "edge" in cmd_text or "portfast" in cmd_text
+            is_net = "network" in cmd_text
+            edge_str = "Portfast edge is enabled" if is_edge else "Portfast edge is disabled"
+            net_str = "Network port (Bridge Assurance) is enabled" if is_net else "Network port is disabled"
+            p2p_str = "Link type is point-to-point" if "point-to-point" in cmd_text else "Link type is point-to-point by default"
+
+            mock_show = f"""
+ Port 2 ({active_iface_short}) of VLAN0001 is designated forwarding 
+   Port path cost {cost_val}, Port priority {prio_val}, Port Identifier {prio_val}.2.
+   Designated root has priority 32768, address 5000.0001.0000
+   Designated bridge has priority 32768, address 5000.0001.0000
+   {p2p_str}
+   {edge_str}
+   {net_str}
+   BPDU: sent 120, received 115
+"""
+        elif "etherchannel" in verify_cmd_lower:
+            mock_show = f"""
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1      Po1(SU)          LACP     Et0/1(P)    Et0/2(P)    
+"""
+        elif "mst" in verify_cmd_lower:
+            mock_show = f"""
+Name      [REGION1]
+Revision  1     Instances configured 2
+
+Instance  Vlans mapped
+--------  ---------------------------------------------------------------------
+0         1-9,11-19,21-4094
+1         10,20
+-------------------------------------------------------------------------------
+"""
+        elif "errdisable" in verify_cmd_lower:
+            mock_show = f"""
+ErrDisable Reason            Status
+-----------------            ------
+bpduguard                    Enabled
+"""
+        else:
+            mock_show = f"""
 VLAN0001
   Spanning tree enabled protocol rstp
   Root ID    Priority    {bridge_prio}
@@ -161,3 +243,48 @@ Et0/1               Altn BLK 19        128.2    P2p
     ) -> Tuple[int, str, str, str]:
         inj_out, verify_out = await self._execute_single_lab(lab_id, node_cfg, cmds, verify_cmd, wait_sec)
         return (cand_id, lab_id, inj_out, verify_out)
+
+    async def bootstrap_initial_configs(
+        self,
+        initial_commands: List[str],
+        target_nodes: Dict[str, LabNode] = None
+    ) -> Dict[str, Tuple[bool, str]]:
+        """
+        랩 시작 시 최초 접속과 동시에 모든 가상 스위치에 베이스라인 초기 설정을 일괄 병렬 주입
+        """
+        nodes = target_nodes if target_nodes is not None else self.lab_configs
+        if self.dry_run or AsyncScrapli is None:
+            return {lab_id: (True, "Mock initial config applied") for lab_id in nodes}
+
+        tasks = []
+        for lab_id, node_cfg in nodes.items():
+            tasks.append(self._apply_init_config(lab_id, node_cfg, initial_commands))
+
+        outcomes = await asyncio.gather(*tasks)
+        results = {}
+        for lab_id, success, msg in outcomes:
+            results[lab_id] = (success, msg)
+        return results
+
+    async def _apply_init_config(self, lab_id: str, node_cfg: LabNode, initial_commands: List[str]) -> Tuple[str, bool, str]:
+        device_params = {
+            "host": node_cfg.host,
+            "port": node_cfg.port,
+            "auth_username": node_cfg.auth_username,
+            "auth_password": node_cfg.auth_password,
+            "auth_strict_key": node_cfg.auth_strict_key,
+            "platform": node_cfg.platform,
+            "transport": "asyncssh",
+            "timeout_socket": 10,
+            "timeout_transport": 10,
+            "timeout_ops": 15,
+        }
+        try:
+            async with AsyncScrapli(**device_params) as conn:
+                await conn.send_configs(initial_commands)
+                await conn.send_command("write memory")
+                return (lab_id, True, f"{node_cfg.host}:{node_cfg.port} 초기 설정 및 저장 완료")
+        except Exception as e:
+            logger.error(f"[{lab_id}] Bootstrap config error: {e}")
+            return (lab_id, False, str(e))
+
