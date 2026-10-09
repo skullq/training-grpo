@@ -1,0 +1,455 @@
+{
+  "name": "iol-multitier-integration",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "mgmt-grpo-integration",
+        "bridge": "br-34eeb9ce3433",
+        "ipv4-subnet": "192.168.100.0/24",
+        "ipv4-gw": "192.168.100.1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": [],
+  "nodes": {
+    "acc-sw1": {
+      "index": "0",
+      "shortname": "acc-sw1",
+      "longname": "clab-iol-multitier-integration-acc-sw1",
+      "fqdn": "acc-sw1.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/acc-sw1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.105",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/acc-sw1",
+        "clab-node-longname": "clab-iol-multitier-integration-acc-sw1",
+        "clab-node-name": "acc-sw1",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2215,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2215,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "acc-sw2": {
+      "index": "1",
+      "shortname": "acc-sw2",
+      "longname": "clab-iol-multitier-integration-acc-sw2",
+      "fqdn": "acc-sw2.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/acc-sw2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.106",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/acc-sw2",
+        "clab-node-longname": "clab-iol-multitier-integration-acc-sw2",
+        "clab-node-name": "acc-sw2",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2216,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2216,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "core-sw1": {
+      "index": "2",
+      "shortname": "core-sw1",
+      "longname": "clab-iol-multitier-integration-core-sw1",
+      "fqdn": "core-sw1.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/core-sw1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.101",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/core-sw1",
+        "clab-node-longname": "clab-iol-multitier-integration-core-sw1",
+        "clab-node-name": "core-sw1",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2211,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2211,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "core-sw2": {
+      "index": "3",
+      "shortname": "core-sw2",
+      "longname": "clab-iol-multitier-integration-core-sw2",
+      "fqdn": "core-sw2.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/core-sw2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.102",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/core-sw2",
+        "clab-node-longname": "clab-iol-multitier-integration-core-sw2",
+        "clab-node-name": "core-sw2",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2212,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2212,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "dist-sw1": {
+      "index": "4",
+      "shortname": "dist-sw1",
+      "longname": "clab-iol-multitier-integration-dist-sw1",
+      "fqdn": "dist-sw1.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/dist-sw1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.103",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/dist-sw1",
+        "clab-node-longname": "clab-iol-multitier-integration-dist-sw1",
+        "clab-node-name": "dist-sw1",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2213,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2213,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "dist-sw2": {
+      "index": "5",
+      "shortname": "dist-sw2",
+      "longname": "clab-iol-multitier-integration-dist-sw2",
+      "fqdn": "dist-sw2.iol-multitier-integration.io",
+      "group": "",
+      "labdir": "/root/training-grpo/labs/clab-iol-multitier-integration/dist-sw2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.17.01",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "192.168.100.104",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-34eeb9ce3433",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/root/training-grpo/labs/clab-iol-multitier-integration/dist-sw2",
+        "clab-node-longname": "clab-iol-multitier-integration-dist-sw2",
+        "clab-node-name": "dist-sw2",
+        "clab-node-type": "l2",
+        "clab-owner": "root",
+        "clab-topo-file": "/root/training-grpo/labs/iol-multitier-integration.clab.yml",
+        "containerlab": "iol-multitier-integration"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "0.0.0.0",
+          "host-port": 2214,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "::",
+          "host-port": 2214,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:79:a4:87",
+          "peer": "z"
+        },
+        "z": {
+          "node": "core-sw2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:b6:ad:2e",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:8d:90:47",
+          "peer": "z"
+        },
+        "z": {
+          "node": "core-sw2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:dc:7a:56",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw1",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:a4:c4:2c",
+          "peer": "z"
+        },
+        "z": {
+          "node": "dist-sw1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:e1:e8:81",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw1",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:38:3c:57",
+          "peer": "z"
+        },
+        "z": {
+          "node": "dist-sw2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:41:4e:b5",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw2",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:67:22:fa",
+          "peer": "z"
+        },
+        "z": {
+          "node": "dist-sw1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:2b:50:8c",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "core-sw2",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:a8:54:42",
+          "peer": "z"
+        },
+        "z": {
+          "node": "dist-sw2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:63:9f:33",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "dist-sw1",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:a2:c0:27",
+          "peer": "z"
+        },
+        "z": {
+          "node": "dist-sw2",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:3f:81:bd",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "dist-sw1",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:68:1f:03",
+          "peer": "z"
+        },
+        "z": {
+          "node": "acc-sw1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:ac:55:54",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "dist-sw2",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:c7:ad:3c",
+          "peer": "z"
+        },
+        "z": {
+          "node": "acc-sw1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:59:8b:a7",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "dist-sw1",
+          "interface": "eth5",
+          "mac": "aa:c1:ab:64:ad:5d",
+          "peer": "z"
+        },
+        "z": {
+          "node": "acc-sw2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:33:ce:91",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "dist-sw2",
+          "interface": "eth5",
+          "mac": "aa:c1:ab:6a:ad:06",
+          "peer": "z"
+        },
+        "z": {
+          "node": "acc-sw2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:7e:76:e0",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

@@ -120,8 +120,11 @@ async def main():
 
     # 4. 최초 접속과 동시에 베이스라인 설정 자동 주입
     if not args.skip_init:
-        all_nodes_path = Path("configs/lab_nodes_24.json")
-        bootstrap_targets = load_lab_nodes(all_nodes_path) if all_nodes_path.exists() else labs
+        if args.topology == "multitier":
+            bootstrap_targets = labs
+        else:
+            all_nodes_path = Path("configs/lab_nodes_24.json")
+            bootstrap_targets = load_lab_nodes(all_nodes_path) if all_nodes_path.exists() else labs
         await pipeline.bootstrap_labs(args.init_config, target_nodes=bootstrap_targets)
 
     # 5. 파이프라인 시나리오 주입 실행 (품질 게이트 적용)

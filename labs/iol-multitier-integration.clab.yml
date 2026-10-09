@@ -56,20 +56,21 @@ topology:
 
   links:
     # Core Interconnect (Port-Channel 1 번들용 이중 링크)
-    - endpoints: ["core-sw1:eth0/0", "core-sw2:eth0/0"]
-    - endpoints: ["core-sw1:eth0/1", "core-sw2:eth0/1"]
+    - endpoints: ["core-sw1:Ethernet0/1", "core-sw2:Ethernet0/1"]
+    - endpoints: ["core-sw1:Ethernet0/2", "core-sw2:Ethernet0/2"]
 
     # Core to Distribution Links (Cross-connect Mesh)
-    - endpoints: ["core-sw1:eth0/2", "dist-sw1:eth0/0"]
-    - endpoints: ["core-sw1:eth0/3", "dist-sw2:eth0/0"]
-    - endpoints: ["core-sw2:eth0/2", "dist-sw1:eth0/1"]
-    - endpoints: ["core-sw2:eth0/3", "dist-sw2:eth0/1"]
+    - endpoints: ["core-sw1:Ethernet0/3", "dist-sw1:Ethernet0/1"]
+    - endpoints: ["core-sw1:Ethernet1/0", "dist-sw2:Ethernet0/1"]
+    - endpoints: ["core-sw2:Ethernet0/3", "dist-sw1:Ethernet0/2"]
+    - endpoints: ["core-sw2:Ethernet1/0", "dist-sw2:Ethernet0/2"]
 
     # Distribution Interconnect (Port-Channel 2 번들용)
-    - endpoints: ["dist-sw1:eth0/2", "dist-sw2:eth0/2"]
+    - endpoints: ["dist-sw1:Ethernet0/3", "dist-sw2:Ethernet0/3"]
 
     # Distribution to Access Links (Dual-homed Uplinks)
-    - endpoints: ["dist-sw1:eth0/3", "acc-sw1:eth0/0"]
-    - endpoints: ["dist-sw2:eth0/3", "acc-sw1:eth0/1"]
-    - endpoints: ["dist-sw1:eth1/0", "acc-sw2:eth0/0"]
-    - endpoints: ["dist-sw2:eth1/0", "acc-sw2:eth0/1"]
+    - endpoints: ["dist-sw1:Ethernet1/0", "acc-sw1:Ethernet0/1"]
+    - endpoints: ["dist-sw2:Ethernet1/0", "acc-sw1:Ethernet0/2"]
+    - endpoints: ["dist-sw1:Ethernet1/1", "acc-sw2:Ethernet0/1"]
+    - endpoints: ["dist-sw2:Ethernet1/1", "acc-sw2:Ethernet0/2"]
+
