@@ -1,0 +1,242 @@
+=== 분석 요약 ===
+1. 유효한 대안(또는 더 적합한 명령)이 0점 처리되고 다른 명령만 200점인 시나리오: 37개
+2. 성공(200점)이 전혀 없어 정답 신호가 실종된 시나리오: 37개
+
+--- [유형 1: 대안 0점 처리 사례 상세 (전체)] ---
+
+[1] STP_ROOT_SETTING_01
+  - 질문(Prompt): SW1을 VLAN 1의 Spanning-Tree Root Bridge로 설정하세요. (현재 상태: SW3가 Root (Bridge ID 32768.5000.0003.0000))
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 1 priority 4096']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[2] STP_ROOT_SETTING_03
+  - 질문(Prompt): SW1의 Bridge Priority를 0으로 설정하여 무조건 루트 브리지를 선점하도록 설정하세요. (현재 상태: SW2가 Root (Bridge ID 4096.5000.0002.0000))
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 1 priority 0']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[3] STP_ROOT_SECONDARY_15
+  - 질문(Prompt): SW3의 VLAN 1에 대해 수동 우선순위 28672를 부여하여 보조 루트 브리지로 만드세요. (현재 상태: SW1이 우선순위 0으로 Root)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 1 priority 28672']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[4] STP_MODE_SWITCH_16
+  - 질문(Prompt): SW1의 Spanning-Tree 모드를 Rapid-PVST+로 변경하고 VLAN 1 루트로 지정하세요. (현재 상태: 기본 PVST+ 동작 중, SW2가 Root)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree mode rapid-pvst\nspanning-tree vlan 1 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[5] STP_PORT_COST_21
+  - 질문(Prompt): SW1의 Ethernet0/1 인터페이스 Spanning-Tree Cost를 4로 수동 지정하여 최단 경로 포트로 만드세요. (현재 상태: Ethernet0/1 Cost 기본값 19)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree cost 4']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree cost 4']
+
+[6] STP_PORT_COST_23
+  - 질문(Prompt): SW3의 Ethernet0/1 인터페이스 Spanning-Tree Cost를 200으로 올려 대체 경로(Alternate Port)로 변경되도록 유도하세요. (현재 상태: Ethernet0/1 포트가 Root 포트로 작동 중)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree cost 200']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree cost 200']
+
+[7] STP_PORT_PRIORITY_25
+  - 질문(Prompt): SW1의 Ethernet0/1 인터페이스 Port Priority를 64로 낮추어 다운스트림 스위치가 Gi0/1을 선호하도록 하세요. (현재 상태: Port Priority 기본값 128)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree port-priority 64']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree port-priority 64']
+
+[8] STP_PORT_PRIORITY_27
+  - 질문(Prompt): SW3의 Ethernet0/1 인터페이스 Port Priority를 192로 올려 우선순위를 낮추세요. (현재 상태: 기본값 128)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree port-priority 192']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree port-priority 192']
+
+[9] STP_GUARD_BPDU_29
+  - 질문(Prompt): SW1의 Ethernet0/3 액세스 인터페이스에 BPDU Guard를 활성화하여 비인가 스위치 연결을 차단하세요. (현재 상태: BPDU Guard 비활성화)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/3\nspanning-tree bpduguard enable']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/3\nspanning-tree bpduguard enable']
+
+[10] STP_GUARD_BPDU_30
+  - 질문(Prompt): SW2의 모든 PortFast 인터페이스에 대해 전역(Global) BPDU Guard를 기본 활성화하세요. (현재 상태: 전역 BPDU Guard 비활성화)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree portfast bpduguard default']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[11] STP_GUARD_ROOT_31
+  - 질문(Prompt): SW1의 Ethernet0/2 다운링크 인터페이스에 Root Guard를 설정하여 루트 브리지 권한 탈취를 방지하세요. (현재 상태: Root Guard 미설정)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/2\nspanning-tree guard root']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/2\nspanning-tree guard root']
+
+[12] STP_GUARD_LOOP_33
+  - 질문(Prompt): SW3의 Ethernet0/1 트렁크 인터페이스에 단방향 링크 장애 방지를 위한 Loop Guard를 구성하세요. (현재 상태: Loop Guard 미설정)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree guard loop']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree guard loop']
+
+[13] STP_GUARD_LOOP_35
+  - 질문(Prompt): SW2에서 전역(Global) Loop Guard 기본 옵션을 활성화하세요. (현재 상태: 전역 Loop Guard 비활성화)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree loopguard default']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[14] STP_PORTFAST_36
+  - 질문(Prompt): SW1의 Ethernet0/3 단말 연결 포트에 PortFast를 활성화하여 즉시 포워딩 상태가 되도록 설정하세요. (현재 상태: 기본 30초 대기 포트)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/3\nspanning-tree portfast']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/3\nspanning-tree portfast']
+
+[15] STP_PORTFAST_37
+  - 질문(Prompt): SW2의 모든 Access 포트에 기본 적용되도록 전역 PortFast 옵션을 활성화하세요. (현재 상태: 전역 PortFast 비활성화)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree portfast default']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[16] STP_PORTFAST_TRUNK_38
+  - 질문(Prompt): SW3의 Ethernet0/2 가상화 서버 트렁크 포트에 PortFast Trunk 옵션을 강제 적용하세요. (현재 상태: 트렁크 포트로 인해 PortFast 거부됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/2\nspanning-tree portfast trunk']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/2\nspanning-tree portfast trunk']
+
+[17] STP_UNSET_ROOT_02
+  - 질문(Prompt): SW2의 VLAN 10 Root Primary 매크로 설정을 취소하고 기본 브리지 우선순위로 복구하세요. (현재 상태: SW2가 Primary Root로 동작 중)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 10 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 10 priority', 'no spanning-tree vlan 10 priority']
+
+[18] STP_UNSET_ROOT_04
+  - 질문(Prompt): SW3의 VLAN 20 Primary Root 설정을 취소하고 우선순위를 기본값으로 되돌리세요. (현재 상태: SW3이 Primary Root로 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 20 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 20 priority', 'no spanning-tree vlan 20 priority']
+
+[19] STP_UNSET_ROOT_06
+  - 질문(Prompt): SW2의 VLAN 30 우선순위 4096 설정을 제거하여 기본값(32768)으로 복귀시키세요. (현재 상태: SW2가 Priority 4096으로 루트)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 30 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 30 priority', 'no spanning-tree vlan 30 priority']
+
+[20] STP_UNSET_ROOT_07
+  - 질문(Prompt): SW1의 VLAN 200 Root Primary 지정을 취소하고 기본 우선순위로 초기화하세요. (현재 상태: SW1이 Root Primary 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 200 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 200 priority', 'no spanning-tree vlan 200 priority']
+
+[21] STP_UNSET_ROOT_08
+  - 질문(Prompt): SW3의 VLAN 40 우선순위 16384 설정을 제거하세요. (현재 상태: SW3이 Priority 16384로 루트 역할 수행 중)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 40 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 40 priority', 'no spanning-tree vlan 40 priority']
+
+[22] STP_UNSET_ROOT_10
+  - 질문(Prompt): SW1의 VLAN 50 우선순위 0 설정을 제거하여 기본값(32768)으로 복원하세요. (현재 상태: SW1이 우선순위 0으로 강제 루트 선점 중)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 50 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 50 priority', 'no spanning-tree vlan 50 priority']
+
+[23] STP_UNSET_SECONDARY_11
+  - 질문(Prompt): SW2의 VLAN 10 Secondary Root 설정을 취소하고 기본 우선순위로 초기화하세요. (현재 상태: SW2가 Secondary Root (우선순위 28672) 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 10 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 10 priority', 'no spanning-tree vlan 10 priority']
+
+[24] STP_UNSET_SECONDARY_12
+  - 질문(Prompt): SW3의 VLAN 20 백업 루트 우선순위 28672 구성을 제거하세요. (현재 상태: SW3이 우선순위 28672 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 20 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 20 priority', 'no spanning-tree vlan 20 priority']
+
+[25] STP_UNSET_SECONDARY_13
+  - 질문(Prompt): SW1의 VLAN 100 Secondary Root 설정을 취소하세요. (현재 상태: SW1이 Secondary Root 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 100 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 100 priority', 'no spanning-tree vlan 100 priority']
+
+[26] STP_UNSET_SECONDARY_14
+  - 질문(Prompt): SW2의 VLAN 200 Secondary Root 매크로 구성을 취소하세요. (현재 상태: SW2가 Secondary Root 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 200 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 200 priority', 'no spanning-tree vlan 200 priority']
+
+[27] STP_UNSET_SECONDARY_15
+  - 질문(Prompt): SW3의 VLAN 1에 부여된 수동 보조 우선순위 28672를 삭제하세요. (현재 상태: SW3이 우선순위 28672 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['no spanning-tree vlan 1 priority']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary', 'no spanning-tree vlan 1 priority']
+
+[28] STP_UNSET_MODE_17
+  - 질문(Prompt): SW2의 Spanning-Tree 모드를 Rapid-PVST+에서 기본 PVST+ 모드로 원복하세요. (현재 상태: Rapid-PVST+ 모드 동작 중)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 10 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree mode pvst']
+
+[29] STP_UNSET_MODE_19
+  - 질문(Prompt): SW1에서 Rapid-PVST+를 해제하고 VLAN 10 우선순위를 기본값으로 초기화하세요. (현재 상태: Rapid-PVST+ 및 VLAN 10 우선순위 4096 적용 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 10 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree mode pvst\nno spanning-tree vlan 10 priority']
+
+[30] STP_UNSET_COST_21
+  - 질문(Prompt): SW1의 Ethernet0/1 인터페이스에 수동 지정된 Cost 4 설정을 삭제하여 링크 대역폭 기준 기본값으로 복원하세요. (현재 상태: Gi0/1에 Cost 4 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nno spanning-tree cost']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nno spanning-tree cost']
+
+[31] STP_UNSET_PRIO_27
+  - 질문(Prompt): SW3의 Ethernet0/1 인터페이스 Port Priority 192 설정을 삭제하여 기본값(128)으로 되돌리세요. (현재 상태: Gi0/1에 Port Priority 192 설정됨)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nno spanning-tree port-priority']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nno spanning-tree port-priority']
+
+[32] STP_UNSET_GUARD_BPDU_30
+  - 질문(Prompt): SW2의 전역(Global) PortFast BPDU Guard 기본 활성화 설정을 해제하세요. (현재 상태: 전역 BPDU Guard 활성화 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['no spanning-tree portfast bpduguard default']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[33] STP_UNSET_PORTFAST_37
+  - 질문(Prompt): SW2의 전역(Global) PortFast 기본 활성화 설정을 해제하세요. (현재 상태: 전역 PortFast 활성화 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['no spanning-tree portfast default']
+  - 200점(SUCCESS) 인정된 명령어: ['spanning-tree vlan 1 root primary']
+
+[34] STP_UNSET_LOAD_BALANCING_39
+  - 질문(Prompt): SW1에 적용된 VLAN 10, 20의 Root Primary 설정을 일괄 취소하고 기본 브리지 우선순위로 복원하세요. (현재 상태: SW1이 VLAN 10, 20의 Root Primary 설정 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 10 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 10,20 priority', 'no spanning-tree vlan 10,20 priority']
+
+[35] STP_UNSET_LOAD_BALANCING_40
+  - 질문(Prompt): SW2에 적용된 VLAN 30, 40 Root Primary 및 VLAN 10, 20 Root Secondary 설정을 모두 초기화하세요. (현재 상태: SW2에 VLAN 로드 밸런싱 Primary/Secondary가 구성된 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['spanning-tree vlan 30 root primary']
+  - 200점(SUCCESS) 인정된 명령어: ['no spanning-tree vlan 30,40 priority\nno spanning-tree vlan 10,20 priority', 'no spanning-tree vlan 30,40 priority\nno spanning-tree vlan 10,20 priority']
+
+[36] PORT_CHANNEL_STP_COST_03
+  - 질문(Prompt): Port-Channel 1 논리 인터페이스의 Spanning-Tree Cost를 9로 수동 지정하여 번들 경로를 최우선화하세요. (현재 상태: Port-Channel 1 기본 Cost 상태)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Port-channel 1\nspanning-tree cost 9']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Po1\nspanning-tree cost 9']
+
+[37] STP_MULTIHOP_COST_TUNING_04
+  - 질문(Prompt): SW3에서 SW1로 향하는 트래픽이 직접 링크 대신 SW2를 경유하도록 SW3의 Ethernet0/1 직결 포트 Cost를 500으로 상향 조정하세요. (현재 상태: Ethernet0/1 Cost 기본값 19)
+  - 0점(INEFFECTIVE) 처리된 유효 대안: ['interface Ethernet0/1\nspanning-tree cost 500']
+  - 200점(SUCCESS) 인정된 명령어: ['interface Et0/1\nspanning-tree cost 500']
+
+--- [유형 2: 성공(200점) 부재 사례 상위 10개] ---
+
+[1] STP_ROOT_SETTING_02
+  - 질문(Prompt): SW2를 VLAN 10의 Primary Root Bridge로 설정하세요. (현재 상태: SW1이 Root (Bridge ID 32768.5000.0001.0000))
+  - 시도된 명령어: ['spanning-tree vlan 10 root primary', 'spanning-tree vlan 10 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[2] STP_ROOT_SETTING_04
+  - 질문(Prompt): SW3을 VLAN 20의 Primary Root Bridge로 구성하세요. (현재 상태: SW1이 Root (기본 우선순위 32768))
+  - 시도된 명령어: ['spanning-tree vlan 20 root primary', 'spanning-tree vlan 20 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[3] STP_ROOT_SETTING_05
+  - 질문(Prompt): SW1의 VLAN 100에 대해 Bridge Priority를 8192로 명시적 구성하여 루트 역할을 부여하세요. (현재 상태: SW2가 우선순위 16384로 루트 역할 수행 중)
+  - 시도된 명령어: ['spanning-tree vlan 100 priority 8192', 'spanning-tree vlan 100 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[4] STP_ROOT_SETTING_06
+  - 질문(Prompt): SW2를 VLAN 30의 루트 브리지로 지정하기 위해 우선순위 4096을 적용하세요. (현재 상태: SW3이 기본 우선순위 32768로 루트)
+  - 시도된 명령어: ['spanning-tree vlan 30 priority 4096', 'spanning-tree vlan 30 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[5] STP_ROOT_SETTING_07
+  - 질문(Prompt): SW1을 VLAN 200의 Primary Root Bridge로 설정하세요. (현재 상태: SW3이 Root)
+  - 시도된 명령어: ['spanning-tree vlan 200 root primary', 'spanning-tree vlan 200 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[6] STP_ROOT_SETTING_08
+  - 질문(Prompt): SW3의 VLAN 40 우선순위를 16384로 설정하여 기본 스위치(32768)들을 제치고 루트가 되도록 하세요. (현재 상태: SW2가 기본 우선순위 32768로 루트)
+  - 시도된 명령어: ['spanning-tree vlan 40 priority 16384', 'spanning-tree vlan 40 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[7] STP_ROOT_SETTING_09
+  - 질문(Prompt): SW2를 관리 VLAN 999의 Root Bridge로 선점하도록 Priority 4096을 부여하세요. (현재 상태: SW1이 기본 우선순위 32768로 루트)
+  - 시도된 명령어: ['spanning-tree vlan 999 priority 4096', 'spanning-tree vlan 999 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[8] STP_ROOT_SETTING_10
+  - 질문(Prompt): SW1을 VLAN 50의 Primary Root Bridge로 설정하세요. (현재 상태: SW2가 우선순위 4096으로 루트)
+  - 시도된 명령어: ['spanning-tree vlan 50 priority 0', 'spanning-tree vlan 50 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[9] STP_ROOT_SECONDARY_11
+  - 질문(Prompt): SW2를 VLAN 10의 Secondary Root Bridge로 설정하세요. (현재 상태: SW1이 Primary Root (우선순위 24576))
+  - 시도된 명령어: ['spanning-tree vlan 10 root secondary', 'spanning-tree vlan 10 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]
+
+[10] STP_ROOT_SECONDARY_12
+  - 질문(Prompt): SW3을 VLAN 20의 백업 루트 브리지 역할을 위해 우선순위 28672로 구성하세요. (현재 상태: SW1이 우선순위 4096으로 Primary Root)
+  - 시도된 명령어: ['spanning-tree vlan 20 priority 28672', 'spanning-tree vlan 20 root primary']
+  - 보상: [0.0, 0.0, -150.0, -200.0]

@@ -16,3 +16,7 @@ data/grpo_dataset.jsonl
 # Local configs with passwords (optional local override)
 configs/lab_nodes.local.json
 .env
+
+# Labs Directory: iol-all-in-one.clab.yml 이외의 모든 파일 및 디렉토리 제외
+labs/*
+!labs/iol-all-in-one.clab.yml

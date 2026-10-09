@@ -53,9 +53,16 @@ def main():
     with open(scenario_path, "r", encoding="utf-8") as f:
         scenarios = json.load(f)
 
-    sft_records = []
-    seen = set()
+    # Spanning-Tree 도메인을 대표하는 5대 핵심 골든 시드 시나리오 ID
+    GOLDEN_SEED_IDS = [
+        "STP_ROOT_SETTING_01",    # 1. 루트 브리지 선점 (Priority 4096)
+        "STP_PORT_COST_21",       # 2. 포트 경로 비용 튜닝 (Path Cost)
+        "STP_GUARD_BPDU_29",      # 3. 인터페이스 보안 (BPDU Guard)
+        "STP_MODE_SWITCH_17",     # 4. 고속 프로토콜 모드 전환 (Rapid-PVST+)
+        "STP_UNSET_ROOT_01",      # 5. 설정 안전 롤백 및 복구 (Unset/Rollback)
+    ]
 
+    sft_records = []
     system_prompt = (
         "당신은 Cisco 엔터프라이즈 네트워크 엔지니어링 전문가입니다. "
         "주어진 네트워크 토폴로지와 L2/STP 요구사항을 정밀하게 분석하여, "
@@ -65,48 +72,23 @@ def main():
 
     for sc in scenarios:
         sc_id = sc["scenario_id"]
+        if sc_id not in GOLDEN_SEED_IDS:
+            continue
+
         task_desc = sc["task_description"]
         curr_state = sc.get("current_state", "기본 상태")
         prompt = f"{task_desc} (현재 상태: {curr_state})"
 
-        # 1. Primary Ground Truth
         primary_cmds = "\n".join(sc.get("baseline_commands", []))
         if primary_cmds:
-            thinking1 = generate_tailored_cot(sc, primary_cmds)
-            assistant_content1 = f"<think>\n{thinking1}\n</think>\n<commands>\n{primary_cmds}\n</commands>"
+            thinking = generate_tailored_cot(sc, primary_cmds)
+            assistant_content = f"<think>\n{thinking}\n</think>\n<commands>\n{primary_cmds}\n</commands>"
             sft_records.append({
                 "scenario_id": sc_id,
-                "variant": "primary",
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": assistant_content1}
-                ]
-            })
-
-        # 2. Valid Alternative (예: 인터페이스 축약형 or root primary 대안 매크로)
-        alt_cmds_list = []
-        for cmd in sc.get("baseline_commands", []):
-            if "interface " in cmd:
-                parts = cmd.split(maxsplit=1)
-                short_if = normalize_interface_name(parts[1], short=True)
-                alt_cmds_list.append(f"interface {short_if}")
-            elif "priority 4096" in cmd:
-                alt_cmds_list.append(f"spanning-tree vlan {sc.get('vlan_id', 1)} root primary")
-            else:
-                alt_cmds_list.append(cmd)
-
-        alt_cmds = "\n".join(alt_cmds_list)
-        if alt_cmds and alt_cmds != primary_cmds:
-            thinking2 = generate_tailored_cot(sc, alt_cmds)
-            assistant_content2 = f"<think>\n{thinking2}\n</think>\n<commands>\n{alt_cmds}\n</commands>"
-            sft_records.append({
-                "scenario_id": sc_id,
-                "variant": "alternative",
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": assistant_content2}
+                    {"role": "assistant", "content": assistant_content}
                 ]
             })
 
@@ -115,9 +97,9 @@ def main():
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
     print(f"==========================================================")
-    print(f"  1단계 콜드 스타트 SFT 데이터셋 구축 완료")
+    print(f"  1단계 콜드 스타트 SFT 데이터셋 구축 완료 (골든 시드 체제)")
     print(f"==========================================================")
-    print(f"총 SFT 데이터 레코드 수: {len(sft_records)}개 (기본 150개 + 대체 문법 확장)")
+    print(f"총 SFT 데이터 레코드 수: {len(sft_records)}개 (STP 5대 대표 골든 시드)")
     print(f"저장 파일 경로: {output_path.resolve()} ({output_path.stat().st_size / 1024:.1f} KB)")
     print(f"포맷: Hugging Face TRL SFTTrainer 표준 Chat Messages Format")
     print(f"==========================================================")
