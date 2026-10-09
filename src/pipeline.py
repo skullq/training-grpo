@@ -126,7 +126,18 @@ class GRPODatasetPipeline:
                 wait_seconds = 3.0
 
         lab_results_map = {}
+        target_nodes_for_scenario = (
+            [scenario.target_node] if (scenario.target_node and scenario.target_node in self.lab_nodes)
+            else [k for k in self.lab_nodes.keys() if k.startswith("clab_node_")]
+        )
+
         if valid_commands_for_injection:
+            # [방법 1 표준화 격리] 테스트 전 대상 노드 클린 롤백 및 시나리오 baseline 조건 주입
+            if not self.dry_run:
+                await self.executor.rollback_nodes(target_nodes_for_scenario)
+                if scenario.baseline_commands:
+                    await self.executor.apply_scenario_baseline(target_nodes_for_scenario, scenario.baseline_commands)
+
             raw_results = await self.executor.run_parallel_injections(
                 valid_commands_for_injection,
                 verify_cmd=verify_cmd,
@@ -135,6 +146,10 @@ class GRPODatasetPipeline:
             )
             for cand_id, lab_id, inj_out, verify_out in raw_results:
                 lab_results_map[cand_id] = (lab_id, inj_out, verify_out)
+
+            # [방법 1 표준화 격리] 테스트 종료 후 즉시 클린 롤백하여 다음 시나리오로의 상태 오염 원천 차단
+            if not self.dry_run:
+                await self.executor.rollback_nodes(target_nodes_for_scenario)
 
         # 4. 결과 채점 및 Raw Reward 산출
         eval_results = []

@@ -293,3 +293,68 @@ Et0/1               Altn BLK 19        128.2    P2p
             logger.error(f"[{lab_id}] Bootstrap config error: {e}")
             return (lab_id, False, str(e))
 
+    async def rollback_nodes(self, node_ids: List[str] = None) -> None:
+        """
+        방법 1 표준화: Cisco 'configure replace nvram:startup-config force' 를 사용하여
+        재부팅 없이 1초 만에 클린 베이스라인 골든 상태로 원자적(Atomic) 롤백
+        """
+        if self.dry_run or AsyncScrapli is None:
+            return
+
+        targets = node_ids if node_ids else list(self.lab_configs.keys())
+        tasks = []
+        for nid in targets:
+            if nid in self.lab_configs:
+                tasks.append(self._rollback_single_node(nid, self.lab_configs[nid]))
+        if tasks:
+            await asyncio.gather(*tasks)
+
+    async def _rollback_single_node(self, lab_id: str, node_cfg: LabNode) -> None:
+        device_params = {
+            "host": node_cfg.host,
+            "port": node_cfg.port,
+            "auth_username": node_cfg.auth_username,
+            "auth_password": node_cfg.auth_password,
+            "auth_strict_key": node_cfg.auth_strict_key,
+            "platform": node_cfg.platform,
+            "transport": "asyncssh",
+            "timeout_socket": 10,
+            "timeout_transport": 10,
+            "timeout_ops": 15,
+        }
+        try:
+            async with AsyncScrapli(**device_params) as conn:
+                await conn.send_command("configure replace nvram:startup-config force")
+        except Exception as e:
+            logger.debug(f"[{lab_id}] Rollback note: {e}")
+
+    async def apply_scenario_baseline(self, node_ids: List[str], baseline_cmds: List[str]) -> None:
+        """시나리오 시작 조건 구성을 위한 사전 baseline 명령어 주입"""
+        if self.dry_run or AsyncScrapli is None or not baseline_cmds:
+            return
+        tasks = []
+        for nid in node_ids:
+            if nid in self.lab_configs:
+                tasks.append(self._apply_baseline_single_node(nid, self.lab_configs[nid], baseline_cmds))
+        if tasks:
+            await asyncio.gather(*tasks)
+
+    async def _apply_baseline_single_node(self, lab_id: str, node_cfg: LabNode, cmds: List[str]) -> None:
+        device_params = {
+            "host": node_cfg.host,
+            "port": node_cfg.port,
+            "auth_username": node_cfg.auth_username,
+            "auth_password": node_cfg.auth_password,
+            "auth_strict_key": node_cfg.auth_strict_key,
+            "platform": node_cfg.platform,
+            "transport": "asyncssh",
+            "timeout_socket": 10,
+            "timeout_transport": 10,
+            "timeout_ops": 15,
+        }
+        try:
+            async with AsyncScrapli(**device_params) as conn:
+                await conn.send_configs(cmds)
+        except Exception as e:
+            logger.debug(f"[{lab_id}] Baseline setup note: {e}")
+
