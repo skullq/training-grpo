@@ -15,7 +15,17 @@ class SpanningTreeEvaluator:
         r"% Ambiguous command",
         r"% Type \"show \?\" for help",
         r"% Command rejected",
-        r"% Error"
+        r"% Parameter value .*? is not valid",
+        r"% must be in increments of",
+        r"% In increments of",
+        r"% Value out of range",
+        r"% Bad [a-zA-Z0-9_-]+",
+        r"% Failed",
+        r"% Error",
+        r"% Illegal",
+        r"% Cannot",
+        r"% Configuration failed",
+        r"% Unknown command"
     ]
 
     ROOT_BRIDGE_PATTERN = r"This bridge is the root"
@@ -31,6 +41,42 @@ class SpanningTreeEvaluator:
         self.syntax_error_reward = syntax_error_reward
         self.format_error_reward = format_error_reward
         self.ineffective_reward = ineffective_reward
+
+    def validate_command_syntax(self, commands: List[str]) -> Tuple[bool, str]:
+        """
+        Cisco IOS Spanning-Tree 문법 규칙 정적/도메인 검증:
+        - Bridge Priority: 0~61440 범위 및 반드시 4096의 배수 (5000 등 불가)
+        - Port Priority: 0~240 범위 및 반드시 16의 배수
+        - Path Cost: 1~200,000,000
+        - invalid_param 등의 테스트용 오류 키워드
+        """
+        for cmd in commands:
+            cmd_clean = cmd.strip()
+            if "invalid_param" in cmd_clean.lower():
+                return True, f"% Invalid parameter in command: {cmd_clean}"
+
+            # 1. Bridge Priority 검사 (VLAN 또는 MST): 반드시 4096의 배수여야 함
+            prio_match = re.search(r"spanning-tree\s+(?:vlan\s+\d+|mst\s+\d+)\s+priority\s+(\d+)", cmd_clean, re.IGNORECASE)
+            if prio_match:
+                val = int(prio_match.group(1))
+                if val < 0 or val > 61440 or val % 4096 != 0:
+                    return True, f"% Parameter value {val} is not valid; must be in increments of 4096 (0-61440)"
+
+            # 2. Port Priority 검사: 반드시 16의 배수 (0~240)
+            port_prio_match = re.search(r"spanning-tree\s+(?:vlan\s+\d+\s+)?port-priority\s+(\d+)", cmd_clean, re.IGNORECASE)
+            if port_prio_match:
+                val = int(port_prio_match.group(1))
+                if val < 0 or val > 240 or val % 16 != 0:
+                    return True, f"% Parameter value {val} is not valid; must be in increments of 16 (0-240)"
+
+            # 3. Path Cost 검사: 1~200,000,000
+            cost_match = re.search(r"spanning-tree\s+(?:vlan\s+\d+\s+)?cost\s+(\d+)", cmd_clean, re.IGNORECASE)
+            if cost_match:
+                val = int(cost_match.group(1))
+                if val < 1 or val > 200000000:
+                    return True, f"% Parameter value {val} is not valid; cost out of range (1-200000000)"
+
+        return False, ""
 
     def check_syntax_errors(self, execution_output: str) -> Tuple[bool, str]:
         """명령어 주입 중 발생한 CLI 문법 오류 확인"""
@@ -52,8 +98,8 @@ class SpanningTreeEvaluator:
         보상 체계 (사용자 정의 기준):
         - FORMAT_ERROR: 명령어가 아닌 한국어/일반 텍스트만 출력된 경우 -> -200
         - SYNTAX_ERROR: CLI 문법 오류 발생 -> -150
-        - SUCCESS: 정상적으로 루트 브리지로 선정 -> +200
-        - INEFFECTIVE: 문법은 맞으나 루트 브리지 미달성 -> 0
+        - SUCCESS: 정상적으로 목표 달성 -> +200
+        - INEFFECTIVE: 문법은 맞으나 목표 미달성 -> 0
         """
         output_repr = "\n".join(candidate.commands) if candidate.commands else candidate.raw_response
 
@@ -70,7 +116,21 @@ class SpanningTreeEvaluator:
                 raw_show_output=""
             )
 
-        # 2. 문법 에러 확인
+        # 2. 정적/도메인 문법 에러 확인 (Priority 4096 배수 규칙 등 검증)
+        has_static_error, static_err_msg = self.validate_command_syntax(candidate.commands)
+        if has_static_error:
+            return EvaluationResult(
+                candidate_id=candidate.candidate_id,
+                lab_id=lab_id,
+                output_text=output_repr,
+                status="SYNTAX_ERROR",
+                raw_reward=self.syntax_error_reward,
+                error_message=static_err_msg,
+                is_root_bridge=False,
+                raw_show_output=show_output
+            )
+
+        # 3. 실제 CLI 실행 출력 내 문법 에러 확인
         has_error, err_msg = self.check_syntax_errors(injection_output)
         if has_error:
             return EvaluationResult(
@@ -153,6 +213,12 @@ class SpanningTreeEvaluator:
         # G. 루트 브리지 설정 목표 시나리오
         if "root" in desc_lower or "루트" in scenario.task_description:
             if re.search(self.ROOT_BRIDGE_PATTERN, show_output, re.IGNORECASE):
+                # 후보 명령어에 명시적 priority 설정이 있는 경우, 실제 show 출력에 해당 값이 반영되었는지 교차 검증
+                prio_match = re.search(r"priority\s+(\d+)", cand_text)
+                if prio_match:
+                    expected_prio = prio_match.group(1)
+                    if not re.search(rf"priority\s+{expected_prio}\b", show_output, re.IGNORECASE):
+                        return False, f"Bridge priority {expected_prio} not reflected in show spanning-tree output"
                 return True, "Root bridge elected successfully"
 
         # H. 인터페이스 관련 시나리오 (Cost, Priority, Guard 등)
@@ -195,6 +261,11 @@ class SpanningTreeEvaluator:
 
         # J. 기본 루트 브리지 패턴 재확인 (폴백)
         if re.search(self.ROOT_BRIDGE_PATTERN, show_output, re.IGNORECASE):
+            prio_match = re.search(r"priority\s+(\d+)", cand_text)
+            if prio_match:
+                expected_prio = prio_match.group(1)
+                if not re.search(rf"priority\s+{expected_prio}\b", show_output, re.IGNORECASE):
+                    return False, f"Bridge priority {expected_prio} not reflected in show spanning-tree output"
             return True, "Root bridge verified"
 
         return False, "Target state not verified in show output"
