@@ -130,7 +130,8 @@ class GRPODatasetPipeline:
             raw_results = await self.executor.run_parallel_injections(
                 valid_commands_for_injection,
                 verify_cmd=verify_cmd,
-                wait_seconds=wait_seconds
+                wait_seconds=wait_seconds,
+                target_node=scenario.target_node
             )
             for cand_id, lab_id, inj_out, verify_out in raw_results:
                 lab_results_map[cand_id] = (lab_id, inj_out, verify_out)

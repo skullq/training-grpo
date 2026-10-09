@@ -217,19 +217,24 @@ Et0/1               Altn BLK 19        128.2    P2p
         self,
         candidate_commands: List[Tuple[int, List[str]]],
         verify_cmd: str,
-        wait_seconds: float = 3.0
+        wait_seconds: float = 3.0,
+        target_node: str = None
     ) -> List[Tuple[int, str, str, str]]:
         """
-        N개의 Action 후보군을 N개의 가상 랩에 동시에 비동기로 주입
-        
-        :param candidate_commands: [(candidate_id, [commands]), ...]
-        :return: [(candidate_id, lab_id, injection_output, verify_output), ...]
+        N개의 Action 후보군을 가상 랩에 비동기로 주입.
+        단일 통합 랩 환경(All-in-One)에서 다층 노드(core-sw1 등)는 해당 노드로 직접 주입하고,
+        단위 테스트 시나리오(SW1 등)는 8개 병렬 랩(clab_node_*)으로 분산 주입.
         """
-        lab_ids = list(self.lab_configs.keys())
-        tasks = []
+        # 다층 전용 타겟 노드가 설정에 직접 존재하는 경우 해당 노드로 라우팅
+        direct_target = target_node if (target_node and target_node in self.lab_configs) else None
+        
+        # 단위 테스트용 병렬 랩 풀 (clab_node_* 우선)
+        unit_labs = [k for k in self.lab_configs.keys() if k.startswith("clab_node_")]
+        default_pool = unit_labs if unit_labs else list(self.lab_configs.keys())
 
+        tasks = []
         for idx, (cand_id, cmds) in enumerate(candidate_commands):
-            lab_id = lab_ids[idx % len(lab_ids)]
+            lab_id = direct_target if direct_target else default_pool[idx % len(default_pool)]
             node_cfg = self.lab_configs[lab_id]
             tasks.append(
                 self._wrap_task(cand_id, lab_id, node_cfg, cmds, verify_cmd, wait_seconds)

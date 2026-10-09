@@ -1,0 +1,284 @@
+name: iol-all-in-one
+
+mgmt:
+  network: mgmt-grpo-all
+  ipv4-subnet: 192.168.100.0/24
+
+topology:
+  nodes:
+    # =========================================================================
+    # PART 1. 단층 구조 (Unit Test 3-Node x 8 Labs = 총 24대)
+    # =========================================================================
+    # Lab 1
+    lab1-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.11
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2201:22"]
+    lab1-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.12
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2301:22"]
+    lab1-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.13
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2401:22"]
+
+    # Lab 2
+    lab2-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.21
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2202:22"]
+    lab2-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.22
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2302:22"]
+    lab2-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.23
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2402:22"]
+
+    # Lab 3
+    lab3-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.31
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2203:22"]
+    lab3-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.32
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2303:22"]
+    lab3-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.33
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2403:22"]
+
+    # Lab 4
+    lab4-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.41
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2204:22"]
+    lab4-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.42
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2304:22"]
+    lab4-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.43
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2404:22"]
+
+    # Lab 5
+    lab5-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.51
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2205:22"]
+    lab5-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.52
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2305:22"]
+    lab5-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.53
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2405:22"]
+
+    # Lab 6
+    lab6-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.61
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2206:22"]
+    lab6-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.62
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2306:22"]
+    lab6-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.63
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2406:22"]
+
+    # Lab 7
+    lab7-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.71
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2207:22"]
+    lab7-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.72
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2307:22"]
+    lab7-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.73
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2407:22"]
+
+    # Lab 8
+    lab8-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.81
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2208:22"]
+    lab8-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.82
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2308:22"]
+    lab8-sw3:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.83
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2408:22"]
+
+    # =========================================================================
+    # PART 2. 다층 구조 (Multi-tier Redundant Integration Lab = 총 6대)
+    # =========================================================================
+    core-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.101
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2231:22"]
+    core-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.102
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2232:22"]
+    dist-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.103
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2233:22"]
+    dist-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.104
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2234:22"]
+    acc-sw1:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.105
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2235:22"]
+    acc-sw2:
+      kind: cisco_iol
+      mgmt-ipv4: 192.168.100.106
+      image: vrnetlab/cisco_iol:L2-17.17.01
+      type: l2
+      ports: ["2236:22"]
+
+  links:
+    # -------------------------------------------------------------------------
+    # PART 1 Links (단층 8개 랩 독립 배선)
+    # -------------------------------------------------------------------------
+    # Lab 1
+    - endpoints: ["lab1-sw1:Ethernet0/1", "lab1-sw2:Ethernet0/1"]
+    - endpoints: ["lab1-sw1:Ethernet0/2", "lab1-sw2:Ethernet0/2"]
+    - endpoints: ["lab1-sw1:Ethernet0/3", "lab1-sw3:Ethernet0/1"]
+    - endpoints: ["lab1-sw2:Ethernet0/3", "lab1-sw3:Ethernet0/2"]
+
+    # Lab 2
+    - endpoints: ["lab2-sw1:Ethernet0/1", "lab2-sw2:Ethernet0/1"]
+    - endpoints: ["lab2-sw1:Ethernet0/2", "lab2-sw2:Ethernet0/2"]
+    - endpoints: ["lab2-sw1:Ethernet0/3", "lab2-sw3:Ethernet0/1"]
+    - endpoints: ["lab2-sw2:Ethernet0/3", "lab2-sw3:Ethernet0/2"]
+
+    # Lab 3
+    - endpoints: ["lab3-sw1:Ethernet0/1", "lab3-sw2:Ethernet0/1"]
+    - endpoints: ["lab3-sw1:Ethernet0/2", "lab3-sw2:Ethernet0/2"]
+    - endpoints: ["lab3-sw1:Ethernet0/3", "lab3-sw3:Ethernet0/1"]
+    - endpoints: ["lab3-sw2:Ethernet0/3", "lab3-sw3:Ethernet0/2"]
+
+    # Lab 4
+    - endpoints: ["lab4-sw1:Ethernet0/1", "lab4-sw2:Ethernet0/1"]
+    - endpoints: ["lab4-sw1:Ethernet0/2", "lab4-sw2:Ethernet0/2"]
+    - endpoints: ["lab4-sw1:Ethernet0/3", "lab4-sw3:Ethernet0/1"]
+    - endpoints: ["lab4-sw2:Ethernet0/3", "lab4-sw3:Ethernet0/2"]
+
+    # Lab 5
+    - endpoints: ["lab5-sw1:Ethernet0/1", "lab5-sw2:Ethernet0/1"]
+    - endpoints: ["lab5-sw1:Ethernet0/2", "lab5-sw2:Ethernet0/2"]
+    - endpoints: ["lab5-sw1:Ethernet0/3", "lab5-sw3:Ethernet0/1"]
+    - endpoints: ["lab5-sw2:Ethernet0/3", "lab5-sw3:Ethernet0/2"]
+
+    # Lab 6
+    - endpoints: ["lab6-sw1:Ethernet0/1", "lab6-sw2:Ethernet0/1"]
+    - endpoints: ["lab6-sw1:Ethernet0/2", "lab6-sw2:Ethernet0/2"]
+    - endpoints: ["lab6-sw1:Ethernet0/3", "lab6-sw3:Ethernet0/1"]
+    - endpoints: ["lab6-sw2:Ethernet0/3", "lab6-sw3:Ethernet0/2"]
+
+    # Lab 7
+    - endpoints: ["lab7-sw1:Ethernet0/1", "lab7-sw2:Ethernet0/1"]
+    - endpoints: ["lab7-sw1:Ethernet0/2", "lab7-sw2:Ethernet0/2"]
+    - endpoints: ["lab7-sw1:Ethernet0/3", "lab7-sw3:Ethernet0/1"]
+    - endpoints: ["lab7-sw2:Ethernet0/3", "lab7-sw3:Ethernet0/2"]
+
+    # Lab 8
+    - endpoints: ["lab8-sw1:Ethernet0/1", "lab8-sw2:Ethernet0/1"]
+    - endpoints: ["lab8-sw1:Ethernet0/2", "lab8-sw2:Ethernet0/2"]
+    - endpoints: ["lab8-sw1:Ethernet0/3", "lab8-sw3:Ethernet0/1"]
+    - endpoints: ["lab8-sw2:Ethernet0/3", "lab8-sw3:Ethernet0/2"]
+
+    # -------------------------------------------------------------------------
+    # PART 2 Links (다층 구조 이중화 메시 배선)
+    # -------------------------------------------------------------------------
+    # Core Interconnect (Port-Channel 1 번들)
+    - endpoints: ["core-sw1:Ethernet0/1", "core-sw2:Ethernet0/1"]
+    - endpoints: ["core-sw1:Ethernet0/2", "core-sw2:Ethernet0/2"]
+
+    # Core to Distribution Links (Cross-connect Mesh)
+    - endpoints: ["core-sw1:Ethernet0/3", "dist-sw1:Ethernet0/1"]
+    - endpoints: ["core-sw1:Ethernet1/0", "dist-sw2:Ethernet0/1"]
+    - endpoints: ["core-sw2:Ethernet0/3", "dist-sw1:Ethernet0/2"]
+    - endpoints: ["core-sw2:Ethernet1/0", "dist-sw2:Ethernet0/2"]
+
+    # Distribution Interconnect (Port-Channel 2 번들)
+    - endpoints: ["dist-sw1:Ethernet0/3", "dist-sw2:Ethernet0/3"]
+
+    # Distribution to Access Links (Dual-homed Uplinks)
+    - endpoints: ["dist-sw1:Ethernet1/0", "acc-sw1:Ethernet0/1"]
+    - endpoints: ["dist-sw2:Ethernet1/0", "acc-sw1:Ethernet0/2"]
+    - endpoints: ["dist-sw1:Ethernet1/1", "acc-sw2:Ethernet0/1"]
+    - endpoints: ["dist-sw2:Ethernet1/1", "acc-sw2:Ethernet0/2"]

@@ -32,8 +32,8 @@ def build_default_lab_nodes(count: int = 8) -> dict:
 
 async def main():
     parser = argparse.ArgumentParser(description="GRPO Network Data Collection Pipeline (Live & Simulation)")
-    parser.add_argument("--topology", type=str, choices=["unit", "multitier"], default="unit",
-                        help="토폴로지 모드: unit (3대 랩 단위 테스트) 또는 multitier (6~8대 다계층 통합 랩)")
+    parser.add_argument("--topology", type=str, choices=["all", "unit", "multitier"], default="all",
+                        help="토폴로지 모드: all (30대 통합 랩 원스톱), unit (3대 랩 단위 테스트) 또는 multitier (다계층 통합 랩)")
     parser.add_argument("--scenarios", type=str, default=None, help="시나리오 JSON 파일 경로 (미지정 시 topology 모드에 맞춰 자동 선택)")
     parser.add_argument("--output", type=str, default=None, help="저장할 JSONL 파일 경로 (미지정 시 topology 모드에 맞춰 자동 선택)")
     parser.add_argument("--labs-config", type=str, default=None, help="랩 접속정보 파일 경로 (미지정 시 topology 모드에 맞춰 자동 선택)")
@@ -48,9 +48,13 @@ async def main():
     args = parser.parse_args()
 
     # 토폴로지 모드에 따른 기본값 자동 분기
-    if args.topology == "multitier":
+    if args.topology == "all":
         default_scenarios = "data/grpo_scenario_multitier_150.json"
-        default_output = "data/grpo_dataset_multitier_150.jsonl"
+        default_output = "data/grpo_dataset_all_150.jsonl"
+        default_cfg = "configs/lab_nodes_all.json"
+    elif args.topology == "multitier":
+        default_scenarios = "data/grpo_scenario_multitier_30.json" if Path("data/grpo_scenario_multitier_30.json").exists() else "data/grpo_scenario_multitier_150.json"
+        default_output = "data/grpo_dataset_multitier_30.jsonl"
         default_cfg = "configs/lab_nodes_integration.json"
     else:
         default_scenarios = "data/grpo_initial_scenario_120.json" if Path("data/grpo_initial_scenario_120.json").exists() else "data/grpo_initial_scenario_80.json"
@@ -100,7 +104,7 @@ async def main():
 
     console.print(Panel(
         f"[bold white]실행 모드:[/bold white] {'[bold red]🔴 LIVE (실제 스위치 연결)[/bold red]' if not dry_run else '[bold green]🟢 DRY-RUN (소프트웨어 시뮬레이션)[/bold green]'}\n"
-        f"[bold white]토폴로지 분류:[/bold white] {'[bold magenta]다계층 통합 랩 (Multi-tier Integration)[/bold magenta]' if args.topology == 'multitier' else '[bold cyan]단위 기능 랩 (Unit Test 3-node)[/bold cyan]'}\n"
+        f"[bold white]토폴로지 분류:[/bold white] {'[bold yellow]전체 통합 랩 (Unit 24대 + Multi-tier 6대 = 총 30대 All-in-One)[/bold yellow]' if args.topology == 'all' else ('[bold magenta]다계층 통합 랩 (Multi-tier Integration)[/bold magenta]' if args.topology == 'multitier' else '[bold cyan]단위 기능 랩 (Unit Test 3-node)[/bold cyan]')}\n"
         f"[bold white]시나리오 수:[/bold white] {len(scenarios)}개 | [bold white]병렬 랩 노드:[/bold white] {len(labs)}개 | [bold white]후보군(G):[/bold white] {args.candidate_count}개\n"
         f"[bold white]품질 게이트:[/bold white] {'[bold green]활성화 (σ > 0 샘플 엄선)[/bold green]' if args.filter_quality else '[dim]비활성화[/dim]'}\n"
         f"[bold white]접속 계정:[/bold white] admin / admin (mgmt-ipv4: 192.168.100.x, port: 22)\n"
@@ -120,7 +124,10 @@ async def main():
 
     # 4. 최초 접속과 동시에 베이스라인 설정 자동 주입
     if not args.skip_init:
-        if args.topology == "multitier":
+        if args.topology == "all":
+            all_30_path = Path("configs/lab_nodes_all_30.json")
+            bootstrap_targets = load_lab_nodes(all_30_path) if all_30_path.exists() else labs
+        elif args.topology == "multitier":
             bootstrap_targets = labs
         else:
             all_nodes_path = Path("configs/lab_nodes_24.json")
