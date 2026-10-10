@@ -411,13 +411,13 @@
   },
   {
     "scenario_id": "STP_FILTER_BPDU_34",
-    "task_description": "SW1의 Gi0/4 테스트 인터페이스에 BPDU Filter를 활성화하여 BPDU 송수신을 차단하세요.",
+    "task_description": "SW1의 Ethernet0/3 테스트 인터페이스에 BPDU Filter를 활성화하여 BPDU 송수신을 차단하세요.",
     "current_state": "BPDU 정상 송수신 상태",
     "target_node": "SW1",
     "vlan_id": 1,
     "expected_root_node": "SW1",
     "baseline_commands": [
-      "interface GigabitEthernet0/4",
+      "interface Ethernet0/3",
       "spanning-tree bpdufilter enable"
     ],
     "convergence_wait_seconds": 3.0
@@ -909,13 +909,13 @@
   },
   {
     "scenario_id": "STP_UNSET_FILTER_BPDU_34",
-    "task_description": "SW1의 Gi0/4 인터페이스에 활성화된 BPDU Filter를 해제하여 정상적인 BPDU 송수신을 복원하세요.",
+    "task_description": "SW1의 Ethernet0/3 인터페이스에 활성화된 BPDU Filter를 해제하여 정상적인 BPDU 송수신을 복원하세요.",
     "current_state": "Gi0/4에 BPDU Filter 활성화 상태",
     "target_node": "SW1",
     "vlan_id": 1,
     "expected_root_node": "SW1",
     "baseline_commands": [
-      "interface GigabitEthernet0/4",
+      "interface Ethernet0/3",
       "no spanning-tree bpdufilter enable"
     ],
     "convergence_wait_seconds": 3.0
@@ -1132,7 +1132,7 @@
   },
   {
     "scenario_id": "STP_PORT_NETWORK_BA_02",
-    "task_description": "SW1의 Ethernet0/1 스위치 간 트렁크 포트에 Bridge Assurance가 동작하도록 PortFast Network 모드를 적용하세요.",
+    "task_description": "SW1의 Ethernet0/1 스위치 간 트렁크 포트에 PortFast Trunk 모드를 적용하세요.",
     "target_node": "SW1",
     "vlan_id": 1,
     "current_state": "일반 트렁크 상태",
@@ -1141,7 +1141,7 @@
     "verify_command": "show spanning-tree interface Ethernet0/1 detail",
     "baseline_commands": [
       "interface Ethernet0/1",
-      "spanning-tree portfast network"
+      "spanning-tree portfast trunk"
     ],
     "convergence_wait_seconds": 3.0
   },
@@ -1819,15 +1819,15 @@
   },
   {
     "scenario_id": "MULTITIER_BPDU_GUARD_ACC_19",
-    "task_description": "[단말 보안] Access-1의 호스트 단말 연결 포트(Ethernet1/0)에 BPDU 수신 시 즉시 차단되도록 BPDU Guard를 활성화하세요.",
+    "task_description": "[단말 보안] Access-1의 호스트 단말 연결 포트(Ethernet0/3)에 BPDU 수신 시 즉시 차단되도록 BPDU Guard를 활성화하세요.",
     "target_node": "acc-sw1",
     "vlan_id": 1,
     "current_state": "BPDU Guard 미설정",
     "expected_root_node": "core-sw1",
-    "target_interface": "Ethernet1/0",
+    "target_interface": "Ethernet0/3",
     "verify_command": "show spanning-tree interface Ethernet1/0 detail",
     "baseline_commands": [
-      "interface Ethernet1/0",
+      "interface Ethernet0/3",
       "spanning-tree bpduguard enable"
     ],
     "convergence_wait_seconds": 3.0

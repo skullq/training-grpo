@@ -1,42 +1,55 @@
-# GRPO Network Training Data Collection Pipeline
+# Cisco L2/STP Network Qwen2.5-3B LoRA Pipeline
 
-네트워크 엔지니어링 LLM의 GRPO (Group Relative Policy Optimization) 미세조정을 위한 데이터 수집 및 상대 우위(Advantage) 가공 파이프라인입니다.
+Cisco 엔터프라이즈 L2/STP 네트워크 도메인에 특화된 **Qwen2.5-3B-Instruct 모델의 LoRA 파인튜닝 파이프라인**입니다.
+Linux 가상 랩 환경(Cisco IOL via Containerlab)에서 실장비 검증을 완료하고, **개인 맥북 M4 (Apple Silicon 24~32GB)**에서 외부 랩 연결 없이 즉시 오프라인 학습할 수 있는 정제된 데이터셋과 학습 스크립트를 제공합니다.
 
-## 🚀 주요 기능
-- **비동기 멀티 랩 주입**: `Asyncio` + `AsyncScrapli`를 사용하여 4~8개의 독립 가상 랩(Containerlab)에 동시 설정 주입 및 결과 수집.
-- **규칙 기반 채점 및 상태 판정**: 문법 에러(`SYNTAX_ERROR`), 포맷 에러(`FORMAT_ERROR`), 성공(`SUCCESS`), 무효(`INEFFECTIVE`) 판정 및 점수 부여.
-- **GRPO Relative Advantage 계산**: 그룹 내 보상 평균과 표준편차를 기반으로 상대 우위 정규화 ($A_i = \frac{R_i - \bar{R}}{\sigma_R + 1e-8}$).
-- **표준 JSONL 저장**: GRPO 학습셋 형식으로 즉시 활용 가능하도록 레코드 저장.
-- **`uv` 환경 관리**: 빠르고 가벼운 파이썬 환경 격리.
+---
 
-## 📖 GPU 서버 LoRA 파인튜닝 가이드
-- **[공식 훈련 가이드 문서 (docs/GRPO_LORA_TRAINING_GUIDE.md)](docs/GRPO_LORA_TRAINING_GUIDE.md)**: 3B 모델(Qwen2.5-3B, Llama-3.2-3B) LoRA 하이퍼파라미터 권장값, TRL 학습 스크립트 예시, 데이터셋 구조 분석 수록.
+## 📚 핵심 문서
 
-## 🛠️ 빠른 시작 (Quick Start)
+- **[📘 마스터 기술 문서 (technical-note.md)](technical-note.md)**: 전체 아키텍처, 1초 원자적 롤백 노이즈 차단 원리, 데이터셋 포맷, M4 튜닝 가이드 요약
+- **[💻 맥북 M4 LoRA 파인튜닝 실무 가이드 (docs/M4_LORA_TRAINING_GUIDE.md)](docs/M4_LORA_TRAINING_GUIDE.md)**: MLX, Hugging Face TRL SFT, DPO 환경 구축 및 상세 실행 방법
+- **[📊 데이터셋 품질 개선 및 실장비 검증 보고서 (docs/DATASET_IMPROVEMENT_REPORT.md)](docs/DATASET_IMPROVEMENT_REPORT.md)**: 150/150 실장비 검증 상세 및 보상 분포 분석
+
+---
+
+## 📁 데이터셋 구조 (`data/`)
+
+모든 데이터는 실장비 검증(100% 통과)을 거쳤으며, 엔지니어링 4단계 CoT 추론(`<think>`, `<commands>`)이 내장되어 있습니다.
+
+| 경로 | 용도 | 건수 | 권장 학습 도구 |
+| :--- | :--- | :---: | :--- |
+| **`data/mlx/train.jsonl`** | **M4 초고속 LoRA SFT** | **130** | **`./train_m4_mlx.sh` (3~4분 소요, 추천 ⭐)** |
+| `data/mlx/valid.jsonl` | M4 MLX 검증용 | 20 | `evaluate_m4.py` |
+| `data/sft/train.jsonl` | HF TRL SFTTrainer 포맷 | 130 | `train_m4_sft.py` (PyTorch MPS) |
+| `data/sft/valid.jsonl` | HF TRL 검증용 | 20 | `evaluate_m4.py` |
+| `data/dpo/train.jsonl` | 랩 없는 선호도 대조 정렬 | 130 | `train_m4_dpo.py` (Chosen vs Rejected) |
+| `data/dpo/valid.jsonl` | DPO 검증용 | 20 | `evaluate_m4.py` |
+| `data/grpo/grpo_dataset_150_repaired.jsonl` | 오프라인 GRPO 완전 교정본 | 150 (600 rollouts) | GRPOTrainer / `view_dataset.py` |
+
+---
+
+## ⚡ 맥북 M4에서 빠른 시작 (Quick Start)
+
+맥북 터미널에서 본 저장소를 클론한 후 바로 실행할 수 있습니다:
 
 ```bash
-# 1. 단위 랩 (Unit Test 3-node) 모드 실행 (120 시나리오)
-uv run python run_collection.py --topology unit --candidate-count 4 --dry-run
+# 1. 초고속 Apple MLX LoRA 학습 (가장 추천, ~3분 소요)
+pip install mlx-lm
+./train_m4_mlx.sh
 
-# 2. 다계층 통합 랩 (Multi-tier Redundant) 모드 실행 (150 시나리오, 권장)
-uv run python run_collection.py --topology multitier --candidate-count 4 --dry-run
+# 2. 독립 20개 테스트셋 정답률 자동 채점
+python evaluate_m4.py --engine mlx --adapter ./output/m4-mlx-qwen-lora
 ```
 
-## 📁 디렉토리 구조
-- `docs/`:
-  - `GRPO_LORA_TRAINING_GUIDE.md`: GPU 서버 파인튜닝 가이드 및 기술 아키텍처 문서
-- `configs/`:
-  - `lab_nodes_8.json`: 3-Node 단위 랩 8개 인스턴스 접속 정보
-  - `lab_nodes_integration.json`: 6대 다계층 통합 랩 접속 정보
-- `labs/`:
-  - `iol-8labs-24sw.clab.yml`: 24대 Cisco IOL 컨테이너랩 토폴로지
-  - `iol-multitier-integration.clab.yml`: Core-Dist-Access 이중화 메시 토폴로지
-- `src/`:
-  - `generator.py`: 4단계 CoT 추론 지원 액션 생성기
-  - `async_executor.py`: 동적 수렴 감지(Dynamic Convergence Polling) Scrapli 비동기 주입기
-  - `evaluator.py`: L2 Trunk / MSTP / Port-Channel 정밀 CLI 채점기
-  - `pipeline.py`: GRPO 품질 게이트(sigma > 0) 및 데이터 수집 파이프라인
-- `data/`:
-  - `grpo_scenario_multitier_150.json`: 150개 최종 시나리오
-  - `grpo_dataset_multitier_150.jsonl`: 3B LoRA 학습용 최종 데이터셋
+---
 
+## 🛠️ 실장비 랩 검증 및 검사 도구
+
+```bash
+# 데이터셋 무결성 전수 검사 (태그, 분산, 포맷)
+uv run python scripts/verify_m4_datasets.py
+
+# GRPO 데이터셋 CLI 프리티 뷰어
+uv run python view_dataset.py --limit 3
+```

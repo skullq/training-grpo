@@ -50,7 +50,7 @@ async def main():
     # 토폴로지 모드에 따른 기본값 자동 분기
     if args.topology == "all":
         default_scenarios = "data/grpo_scenario_multitier_150.json"
-        default_output = "data/grpo_dataset_all_150.jsonl"
+        default_output = "data/grpo/grpo_dataset_150_repaired.jsonl"
         default_cfg = "configs/lab_nodes_all.json"
     elif args.topology == "multitier":
         default_scenarios = "data/grpo_scenario_multitier_30.json" if Path("data/grpo_scenario_multitier_30.json").exists() else "data/grpo_scenario_multitier_150.json"

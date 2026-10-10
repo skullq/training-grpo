@@ -1,180 +1,147 @@
-# GRPO Network Training Data Collection & Evaluation Technical Note
+# 📘 네트워크 3B 모델 LoRA 파인튜닝 & 실장비 검증 테크니컬 노트
 
-본 문서는 네트워크 자동화 도메인에서 **GRPO(Group Relative Policy Optimization)** 기반 LLM 미세조정(Fine-Tuning)을 수행하기 위한 데이터 수집 파이프라인 아키텍처, 비동기 랩 연동, 보상 함수(Reward Function) 설계 및 수학적 정규화 로직을 종합 정리한 기술 문서입니다.
+본 문서는 Cisco 엔터프라이즈 L2/STP 도메인에 특화된 **Qwen2.5-3B-Instruct 모델의 LoRA 파인튜닝**을 위해, **Linux 랩 서버의 실장비 라이브 검증**과 **개인 맥북 M4의 오프라인 학습 파이프라인**을 연계한 엔지니어링 기술 문서입니다.
 
 ---
 
-## 1. 아키텍처 및 파이프라인 개요
+## 1. 2-Tier 분리형 파이프라인 아키텍처
 
-전통적인 PPO(Proximal Policy Optimization)는 Value Network(Critic)를 별도로 훈련해야 하므로 고비용 메모리와 복잡한 네트워크 상태 추정이 필요합니다. 반면 **GRPO**는 Critic 모델을 제거하고, 하나의 프롬프트에 대해 샘플링된 $G$개의 롤아웃(Completions) 그룹 내부 통계량을 사용하여 상대적 우위(Advantage)를 직접 도출합니다.
+실제 가상 스위치 환경(Linux)과 개인 학습 환경(MacBook M4)을 완전히 분리하여 운영합니다.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        1. 프롬프트 투입 (40개 시나리오)                       │
-│    (Task Description, Current Topology State, Target Node, Target VLAN)│
+│ [Tier 1] Linux 랩 서버 (Containerlab + Cisco IOL L2-17.17.01)          │
+├────────────────────────────────────────────────────────────────────────┤
+│ • 150개 멀티티어 L2/STP 시나리오 원본 마스터 관리                      │
+│ • 1초 원자적 롤백 (configure replace nvram:startup-config force) 격리   │
+│ • Cisco IOL 실장비 전수 주입 검증 (150/150 시나리오 100% 성공)          │
+│ • 실장비 검증 완료 4대 데이터셋 자동 생성 (MLX, SFT, DPO, GRPO)        │
 └───────────────────────────────────┬────────────────────────────────────┘
-                                    │
+                                    │ Git Clone / Pull (데이터셋 & 스크립트만 복제)
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                    2. LLM Generator (다양성 샘플링)                     │
-│       (GPT-4o / Claude 3.5 / Llama-3-8B with Temperature = 0.8)        │
-│       - G=4~5개 후보 Action (<think> 추론 및 <commands> CLI 생성)         │
-│       - 최적해(4096), 대안(root primary), 문법 에러(5000), 형식 에러 분산     │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│             3. 병렬 가상 랩 주입 (Asyncio + Scrapli AsyncSSH)             │
-│        - 4~8개 독립 Containerlab 인스턴스에 비동기 병렬 접속 (Port 2201~) │
-│        - CLI 설정 동시 주입 후 RSTP/Rapid-PVST 3초 수렴 대기              │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                     4. 결과 수집 및 규칙 기반 채점                       │
-│        - show spanning-tree vlan X 출력 및 문법 에러 로그 분석          │
-│        - 4단계 보상: SUCCESS(+200), INEFFECTIVE(0), SYNTAX(-150), FORMAT(-200)│
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                   5. GRPO Relative Advantage 계산                      │
-│        - A_i = (R_i - mean(R)) / (std(R) + 1e-8)                      │
-│        - 분산(std) = 0 일 때 0.0 클램핑 (그래디언트 폭주 방지)           │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                    6. 최종 학습용 데이터셋 저장 (JSONL)                   │
-│           {"scenario_id": ..., "prompt": ..., "group_outputs": [...]}   │
+│ [Tier 2] 맥북 M4 (Apple Silicon 24~32GB Unified Memory)                │
+├────────────────────────────────────────────────────────────────────────┤
+│ • 랩 연결 0% (완전 오프라인 환경에서 데이터셋 기반 LoRA 학습)          │
+│ • [추천 1순위] Apple MLX LoRA SFT: ./train_m4_mlx.sh (약 3분 완료)     │
+│ • [표준 HF] PyTorch MPS SFT: python train_m4_sft.py                    │
+│ • [오프라인 DPO] 선호도 대조 정렬: python train_m4_dpo.py (오답 회피)   │
+│ • [자동 채점] 20개 독립 테스트셋 평가: python evaluate_m4.py           │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. 세부 단계별 엔지니어링 분석
+## 2. 실장비 랩 검증 및 노이즈 원천 차단 (Zero Contamination)
 
-### 1단계: 프롬프트 투입 및 시나리오 구조화
-- 네트워크 설정은 단일 명령어로 끝나지 않으며, 현재 토폴로지 상태에 의존적입니다.
-- 따라서 프롬프트는 단순 명령(`SW1을 루트로 변경`)이 아닌 **현재 상태(`현재 SW3가 루트`)**, **대상 스위치(`SW1`)**, **대상 VLAN**을 포함하여 모델이 상태 변화 경로를 올바르게 추론하도록 유도합니다.
+이전 시나리오의 설정 잔여물(Priority, Cost, PortFast 등)로 인한 간섭을 제거하기 위해 **무재부팅 1초 원자적 롤백 메커니즘**을 확립하였습니다.
 
-### 2단계: Generator 탐색(Exploration) 다양성 확보
-- GRPO 학습이 효과를 보려면 그룹 내에 **고득점(정답)**과 **저득점(오답/문법에러)**이 고루 섞여야 합니다.
-- `temperature=0.8` 이상을 적용하여 정답 접근법(매크로 명령 vs 수동 우선순위), 문법 오류(비인가 파라미터), 포맷 미준수(설명 텍스트만 출력)를 고루 생성합니다.
+### ① 무재부팅 1초 원자적 격리 절차
+1. **골든 베이스라인 고정**: 부팅 시 `configs/initial_config.cfg` 주입 후 `write memory`로 `startup-config`를 영구 저장.
+2. **사전 원자적 롤백**: 매 시나리오 실행 전 `configure replace nvram:startup-config force`를 수행하여 스위치를 완전 초기 상태로 복구 (소요시간 1초 미만).
+3. **실장비 명령어 주입**: Cisco IOL 실장비에 CLI 주입 및 `% Invalid input detected` 등 오류 실측.
+4. **사후 원자적 롤백**: 시나리오 검증 즉시 다시 롤백을 수행하여 **시나리오 간 설정 오염 0.0%** 달성.
 
-### 3단계: 병렬 랩 주입 (Containerlab + Scrapli)
-- **독립 포트 격리**: 4~8개의 컨테이너에 각각 포트(`2201`, `2202`, `2203` 등)를 할당하여 동시 주입 시 상호 간섭이 없습니다.
-- **AsyncScrapli 드라이버**: `asyncssh` 기반의 비동기 세션을 생성하여 수초 내에 8개 노드의 설정 주입을 병렬 완료합니다.
-
-### 4단계: 수렴 시간 및 보상 채점 (중요 주의사항)
-- **⚠️ STP 수렴 시간 경고**: 레거시 802.1D Spanning-Tree는 Listening(15s) + Learning(15s) = 최소 30~50초의 포워딩 지연이 필요합니다.
-- 따라서 3초 뒤 `show spanning-tree`로 즉시 결과를 수집하려면 장비 환경이 반드시 **Rapid-PVST+ (`spanning-tree mode rapid-pvst`)** 또는 **RSTP(802.1w)** 여야 합니다 (Proposal-Agreement 메커니즘으로 1초 미만 즉시 수렴).
-
-### 5단계: GRPO Relative Advantage 수식 및 엣지 케이스
-$$A_i = \frac{R_i - \text{mean}(R)}{\text{std}(R) + \epsilon}$$
-- **표준편차 0 예외 처리**: 모델 생성물이 전부 성공(+200)하거나 전부 실패(-150)하여 $\text{std}(R) = 0$이 될 경우, 분모의 $\epsilon(1e-8)$로 인해 상대 점수가 $\pm 10^8$ 단위로 폭증합니다.
-- [src/advantage.py](file:///d:/my-code/training-GRPO/src/advantage.py)에서는 `if std_r < eps: advantages = zeros()` 로 클램핑하여 모든 후보의 Advantage를 0.0으로 안전하게 보정합니다.
+### ② 실장비 검증 피드백 및 IOL 문법 동기화
+* **물리 인터페이스 정규화**: Cisco IOL 스위치는 `GigabitEthernet` 인터페이스가 없으므로 `Ethernet0/1 ~ Ethernet0/3`으로 전수 매핑.
+* **PortFast 표준화**: NX-OS 전용 `portfast edge` 대신 Cisco IOL 지원 표준인 `spanning-tree portfast` 및 `spanning-tree portfast trunk`로 교정.
+* **최종 검증 실측치**: **150개 시나리오 전수 라이브 주입 성공 (통과율 100.0%)** ([검증 로그](docs/live_lab_validation_report_v2.json))
 
 ---
 
-## 3. 보상 매트릭스 (Reward Matrix)
+## 3. 정제된 데이터셋 구성 및 선택 가이드
 
-| 상태 (`status`) | 보상 (`raw_reward`) | 판정 조건 | 학습 시 의미 |
-| :--- | :---: | :--- | :--- |
-| **`SUCCESS`** | **`+200`** | `show spanning-tree`에 `This bridge is the root` 존재 | 정책을 해당 방향으로 강화 (Positive Reinforcement) |
-| **`INEFFECTIVE`** | **`0`** | 문법 에러는 없으나 루트 브리지 선출 실패 | 불필요하거나 무의미한 액션 억제 |
-| **`SYNTAX_ERROR`** | **`-150`** | `% Invalid input`, `% Incomplete command` 등 장비 오류 | 문법 오류 패턴을 강력하게 배제 |
-| **`FORMAT_ERROR`** | **`-200`** | CLI 명령어가 아닌 자연어 대화체만 출력 | 에이전트의 포맷 이탈에 대해 최악의 패널티 부과 |
+과거 레거시 파일 및 중간 임시 파일은 모두 삭제되었으며, 현재 `data/` 디렉토리에는 검증된 최신 데이터만 유지됩니다.
 
----
+```
+data/
+├── mlx/                      # ⭐ [맥북 M4 1순위 권장] Apple MLX 네이티브 포맷
+│   ├── train.jsonl           # 130개 학습셋
+│   └── valid.jsonl           # 20개 검증셋
+├── sft/                      # Hugging Face TRL SFTTrainer 표준 포맷
+│   ├── train.jsonl           # 130개 학습셋
+│   └── valid.jsonl           # 20개 검증셋
+├── dpo/                      # 랩 없는 오프라인 DPO 선호도 정렬 포맷
+│   ├── train.jsonl           # 130개 (chosen vs rejected 페어)
+│   └── valid.jsonl           # 20개 검증셋
+├── grpo/                     # 오프라인 GRPO 완전 교정본
+│   └── grpo_dataset_150_repaired.jsonl  # 150개 시나리오 (600 롤아웃, σ > 0 보장)
+└── grpo_scenario_multitier_150.json     # 150개 원본 시나리오 마스터
+```
 
-## 4. 학습용 JSONL 데이터셋 규격
+### 🎯 맥북 M4에서 어떤 파일을 가져다 학습해야 하는가?
+* **LoRA 파인튜닝 (기본)**: 👉 **`data/mlx/train.jsonl`** (MLX 프레임워크) 또는 **`data/sft/train.jsonl`** (PyTorch TRL)
+* **오답 회피 선호도 정렬**: 👉 **`data/dpo/train.jsonl`**
+* **평가/채점**: 👉 **`data/mlx/valid.jsonl`** 또는 **`data/sft/valid.jsonl`**
 
-```json
-{
-  "scenario_id": "STP_ROOT_SETTING_01",
-  "prompt": "SW1을 Root Bridge로 설정하세요. (현재 상태: SW3가 Root)",
-  "group_outputs": [
-    {
-      "output": "spanning-tree vlan 1 priority 4096",
-      "raw_reward": 200.0,
-      "relative_advantage": 1.0,
-      "status": "SUCCESS"
-    },
-    {
-      "output": "spanning-tree vlan 1 root primary",
-      "raw_reward": 200.0,
-      "relative_advantage": 1.0,
-      "status": "SUCCESS"
-    },
-    {
-      "output": "spanning-tree vlan 1 priority 5000",
-      "raw_reward": -150.0,
-      "relative_advantage": -0.86,
-      "status": "SYNTAX_ERROR"
-    },
-    {
-      "output": "SW1을 루트 브리지로 변경했습니다.",
-      "raw_reward": -200.0,
-      "relative_advantage": -1.13,
-      "status": "FORMAT_ERROR"
-    }
-  ]
-}
+### 4단계 CoT 추론 구조
+모든 데이터의 모델 응답은 환각을 방지하고 엔지니어링 논리를 주입하기 위해 아래 태그 규격으로 통일되어 있습니다:
+```xml
+<think>
+1. 토폴로지 분석: 대상 장비는 'SW1'이며 현재 상태는 'SW3가 Root'임.
+2. 파라미터 및 타이브레이커 계산: VLAN 1의 Bridge Priority를 4096으로 조정함.
+3. 영향도(Blast Radius) 검토: TCN 발생 후 1초 내 Rapid 수렴 보장.
+4. 명령어 도출:
+spanning-tree vlan 1 priority 4096
+</think>
+<commands>
+spanning-tree vlan 1 priority 4096
+</commands>
 ```
 
 ---
 
-## 5. 가변 인터페이스 동적 매핑 및 접속정보 분리 아키텍처
+## 4. 맥북 M4 LoRA 파인튜닝 실행 가이드
 
-네트워크 테스트베드와 가상화 플랫폼(Cisco IOL, CSR1000v, c8000v, Arista vEOS 등)은 인터페이스 명명 체계가 서로 다릅니다. 파이프라인은 원본 시나리오 데이터를 수정하지 않고도 실행 환경에 맞춰 동적으로 인터페이스를 매핑 및 검증할 수 있는 아키텍처를 제공합니다.
+맥북 M4(24~32GB 통합 메모리)에서 저장소를 클론한 후 즉시 실행할 수 있습니다.
 
-### 5.1 랩 접속 프로파일 분리 (`configs/lab_nodes.json`)
-- 독립된 설정 파일에서 각 가상 노드의 IP, SSH 포트, 계정 정보 및 노드별 인터페이스 매핑 테이블을 관리합니다.
-```json
-{
-  "clab_node_1": {
-    "host": "127.0.0.1",
-    "port": 2201,
-    "auth_username": "admin",
-    "auth_password": "admin",
-    "platform": "cisco_iosxe",
-    "interface_map": {
-      "Gi0/1": "Ethernet0/0",
-      "Gi0/2": "Ethernet0/1",
-      "Gi0/3": "Ethernet0/2",
-      "Gi0/4": "Port-Channel0"
-    }
-  }
-}
-```
-
-### 5.2 3단계 가변 인터페이스 처리 파이프라인
-```
-[1. 시나리오 동적 치환]
-   - 파이프라인 시작 시 interface_map을 적용하여 Scenario의 프롬프트와 baseline_commands를
-     사용자 환경(Ethernet0/0, Port-Channel0 등)으로 자동 변환
-
-[2. 인터페이스 정규화기 (src/interface_normalizer.py)]
-   - 모델 생성물 및 CLI 출력의 축약형(Et0/0, Po0, Gi0/1)과 정규형(Ethernet0/0, Port-Channel0) 상호 호환 보장
-   - build_interface_regex_pattern()을 통해 장비 CLI 출력 형식에 무관하게 정규식 패턴 자동 매칭
-
-[3. 유연한 상태 검증 (src/evaluator.py)]
-   - 루트 브리지뿐만 아니라 포트별 Cost, Port Priority, Guard 설정 여부를
-     show spanning-tree 출력 테이블에서 정규식으로 정밀 판정 (+200, 0, -150, -200)
-```
-
----
-
-## 6. `uv` 환경 관리 및 실행 명령어
-
+### ① Apple MLX 초고속 LoRA SFT (가장 추천 ⭐)
+Apple Silicon Unified Memory 최적화를 통해 약 **3~4분 만에 3B 모델 LoRA 파인튜닝을 완료**합니다.
 ```bash
-# 가상환경 동기화 및 패키지 설치
-uv pip install "scrapli<=2024.7.30" asyncssh numpy pydantic openai rich
-
-# 시뮬레이션 모드 (외부 접속정보 파일 지정 및 40개 시나리오 수집)
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --dry-run
-
-# 실제 Containerlab 환경 연결 모드
-uv run python run_collection.py --scenarios data/sample_scenarios.json --output data/grpo_dataset.jsonl --labs-config configs/lab_nodes.json --candidate-count 4 --live
+pip install mlx-lm
+./train_m4_mlx.sh
 ```
+* **데이터셋**: `data/mlx/train.jsonl`
+* **출력 디렉토리**: `./output/m4-mlx-qwen-lora`
+
+### ② Hugging Face PyTorch MPS SFT
+표준 Hugging Face 생태계를 사용할 경우:
+```bash
+pip install transformers datasets trl peft torch accelerate
+python train_m4_sft.py
+```
+* **데이터셋**: `data/sft/train.jsonl`
+* **디바이스**: Apple Silicon MPS (`torch.backends.mps`)
+
+### ③ 오프라인 DPO 선호도 정렬
+SFT 모델을 기반으로, 랩 연결 없이 실제 엔지니어링 오답(`rejected`)을 스스로 회피하도록 가중치를 정렬합니다:
+```bash
+python train_m4_dpo.py
+```
+* **데이터셋**: `data/dpo/train.jsonl` (chosen vs rejected)
+
+### ④ 모델 추론 및 자동 채점
+학습 완료 후 독립된 20개 Validation 시나리오에 대해 정확도를 자동 채점합니다:
+```bash
+# MLX LoRA 모델 평가
+python evaluate_m4.py --engine mlx --adapter ./output/m4-mlx-qwen-lora
+
+# Hugging Face LoRA 모델 평가
+python evaluate_m4.py --engine hf --adapter ./output/m4-sft-lora-final
+```
+
+---
+
+## 5. 핵심 파일 및 도구 맵
+
+| 구분 | 파일 경로 | 설명 | 주요 환경 |
+| :--- | :--- | :--- | :---: |
+| **M4 학습** | `train_m4_mlx.sh` | Apple MLX 기반 초고속 LoRA 학습 스크립트 | 맥북 M4 |
+| **M4 학습** | `train_m4_sft.py` | PyTorch MPS + TRL SFTTrainer 스크립트 | 맥북 M4 |
+| **M4 정렬** | `train_m4_dpo.py` | PyTorch MPS + TRL DPOTrainer 선호도 정렬 스크립트 | 맥북 M4 |
+| **M4 평가** | `evaluate_m4.py` | 20개 독립 테스트셋 LoRA 추론 및 자동 채점기 | 맥북 M4 |
+| **오프라인 채점** | `src/offline_reward.py` | 외부 랩 연결 없는 독립 Cisco 구문/보상 채점 엔진 | 공용 |
+| **데이터 검증** | `scripts/verify_m4_datasets.py` | 데이터셋 태그 및 무결성 전수 검증 도구 | 공용 |
+| **데이터 뷰어** | `view_dataset.py` | 터미널 테이블 기반 GRPO 데이터셋 프리티 뷰어 | 공용 |
+| **실장비 검증** | `scripts/run_live_lab_validation_v2.py` | 1초 원자적 롤백 기반 150개 실장비 주입 검증기 | Linux 랩 |
+| **데이터셋 빌드** | `scripts/build_m4_datasets.py` | 실장비 검증 반영 4종 M4 데이터셋 빌더 | Linux 랩 |

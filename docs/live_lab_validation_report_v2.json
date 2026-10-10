@@ -1,0 +1,1437 @@
+[
+  {
+    "scenario_id": "STP_ROOT_SETTING_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 1 priority 4096"
+    ],
+    "inj_output": "spanning-tree vlan 1 priority 4096"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 10 root primary"
+    ],
+    "inj_output": "spanning-tree vlan 10 root primary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 1 priority 0"
+    ],
+    "inj_output": "spanning-tree vlan 1 priority 0"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 20 root primary"
+    ],
+    "inj_output": "spanning-tree vlan 20 root primary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 100 priority 8192"
+    ],
+    "inj_output": "spanning-tree vlan 100 priority 8192"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 30 priority 4096"
+    ],
+    "inj_output": "spanning-tree vlan 30 priority 4096"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 200 root primary"
+    ],
+    "inj_output": "spanning-tree vlan 200 root primary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 40 priority 16384"
+    ],
+    "inj_output": "spanning-tree vlan 40 priority 16384"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_09",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 999 priority 4096"
+    ],
+    "inj_output": "spanning-tree vlan 999 priority 4096"
+  },
+  {
+    "scenario_id": "STP_ROOT_SETTING_10",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 50 priority 0"
+    ],
+    "inj_output": "spanning-tree vlan 50 priority 0"
+  },
+  {
+    "scenario_id": "STP_ROOT_SECONDARY_11",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 10 root secondary"
+    ],
+    "inj_output": "spanning-tree vlan 10 root secondary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SECONDARY_12",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 20 priority 28672"
+    ],
+    "inj_output": "spanning-tree vlan 20 priority 28672"
+  },
+  {
+    "scenario_id": "STP_ROOT_SECONDARY_13",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 100 root secondary"
+    ],
+    "inj_output": "spanning-tree vlan 100 root secondary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SECONDARY_14",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 200 root secondary"
+    ],
+    "inj_output": "spanning-tree vlan 200 root secondary"
+  },
+  {
+    "scenario_id": "STP_ROOT_SECONDARY_15",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 1 priority 28672"
+    ],
+    "inj_output": "spanning-tree vlan 1 priority 28672"
+  },
+  {
+    "scenario_id": "STP_MODE_SWITCH_16",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode rapid-pvst",
+      "spanning-tree vlan 1 root primary"
+    ],
+    "inj_output": "spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance windowspanning-tree vlan 1 root primary"
+  },
+  {
+    "scenario_id": "STP_MODE_SWITCH_17",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode rapid-pvst"
+    ],
+    "inj_output": "spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_MODE_SWITCH_18",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode mst"
+    ],
+    "inj_output": "spanning-tree mode mst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_MODE_SWITCH_19",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode rapid-pvst",
+      "spanning-tree vlan 10 priority 4096"
+    ],
+    "inj_output": "spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance windowspanning-tree vlan 10 priority 4096"
+  },
+  {
+    "scenario_id": "STP_MODE_SWITCH_20",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode pvst"
+    ],
+    "inj_output": "spanning-tree mode pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_PORT_COST_21",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree cost 4"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree cost 4"
+  },
+  {
+    "scenario_id": "STP_PORT_COST_22",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree vlan 10 cost 10"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree vlan 10 cost 10"
+  },
+  {
+    "scenario_id": "STP_PORT_COST_23",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree cost 200"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree cost 200"
+  },
+  {
+    "scenario_id": "STP_PORT_COST_24",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree vlan 20 cost 5"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree vlan 20 cost 5"
+  },
+  {
+    "scenario_id": "STP_PORT_PRIORITY_25",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree port-priority 64"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree port-priority 64"
+  },
+  {
+    "scenario_id": "STP_PORT_PRIORITY_26",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree vlan 10 port-priority 32"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree vlan 10 port-priority 32"
+  },
+  {
+    "scenario_id": "STP_PORT_PRIORITY_27",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree port-priority 192"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree port-priority 192"
+  },
+  {
+    "scenario_id": "STP_PORT_PRIORITY_28",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree vlan 100 port-priority 16"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree vlan 100 port-priority 16"
+  },
+  {
+    "scenario_id": "STP_GUARD_BPDU_29",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree bpduguard enable"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree bpduguard enable"
+  },
+  {
+    "scenario_id": "STP_GUARD_BPDU_30",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree portfast bpduguard default"
+    ],
+    "inj_output": "spanning-tree portfast bpduguard default"
+  },
+  {
+    "scenario_id": "STP_GUARD_ROOT_31",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree guard root"
+  },
+  {
+    "scenario_id": "STP_GUARD_ROOT_32",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree guard root"
+  },
+  {
+    "scenario_id": "STP_GUARD_LOOP_33",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree guard loop"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree guard loop"
+  },
+  {
+    "scenario_id": "STP_FILTER_BPDU_34",
+    "status": "SYNTAX_ERROR",
+    "error_msg": "% Invalid input detected",
+    "adapted_cmds": [
+      "interface Ethernet1/0",
+      "spanning-tree bpdufilter enable"
+    ],
+    "inj_output": "interface Ethernet1/0\n                                   ^\n% Invalid input detected at '^' marker.spanning-tree bpdufilter enable\n                                ^\n% Invalid input detected at '^' marker."
+  },
+  {
+    "scenario_id": "STP_GUARD_LOOP_35",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree loopguard default"
+    ],
+    "inj_output": "spanning-tree loopguard default"
+  },
+  {
+    "scenario_id": "STP_PORTFAST_36",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree portfast"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree portfast\n%Warning: portfast should only be enabled on ports connected to a single\n host. Connecting hubs, concentrators, switches, bridges, etc... to this\n interface  when portfast is enabled, can cause temporary bridging loops.\n Use with CAUTION\n\n%Portfast has been configured on Ethernet0/3 but will only\n have effect when the interface is in a non-trunking mode."
+  },
+  {
+    "scenario_id": "STP_PORTFAST_37",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree portfast default"
+    ],
+    "inj_output": "spanning-tree portfast default\n%Warning: this command enables portfast by default on all interfaces. You\n should now disable portfast explicitly on switched ports leading to hubs,\n switches and bridges as they may create temporary bridging loops."
+  },
+  {
+    "scenario_id": "STP_PORTFAST_TRUNK_38",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "spanning-tree portfast trunk"
+    ],
+    "inj_output": "interface Ethernet0/2\nspanning-tree portfast trunk\n%Warning: portfast should only be enabled on ports connected to a single\n host. Connecting hubs, concentrators, switches, bridges, etc... to this\n interface  when portfast is enabled, can cause temporary bridging loops.\n Use with CAUTION"
+  },
+  {
+    "scenario_id": "STP_LOAD_BALANCING_39",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 10,20 root primary"
+    ],
+    "inj_output": "spanning-tree vlan 10,20 root primary"
+  },
+  {
+    "scenario_id": "STP_LOAD_BALANCING_40",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 30,40 root primary",
+      "spanning-tree vlan 10,20 root secondary"
+    ],
+    "inj_output": "spanning-tree vlan 30,40 root primary\nspanning-tree vlan 10,20 root secondary"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 1 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 1 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 10 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 10 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 1 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 1 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 20 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 20 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 100 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 100 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 30 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 30 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 200 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 200 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 40 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 40 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_09",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 999 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 999 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_ROOT_10",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 50 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 50 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_SECONDARY_11",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 10 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 10 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_SECONDARY_12",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 20 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 20 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_SECONDARY_13",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 100 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 100 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_SECONDARY_14",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 200 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 200 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_SECONDARY_15",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 1 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 1 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_MODE_16",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode pvst",
+      "no spanning-tree vlan 1 priority"
+    ],
+    "inj_output": "spanning-tree mode pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance windowno spanning-tree vlan 1 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_MODE_17",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode pvst"
+    ],
+    "inj_output": "spanning-tree mode pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_UNSET_MODE_18",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode pvst"
+    ],
+    "inj_output": "spanning-tree mode pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_UNSET_MODE_19",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode pvst",
+      "no spanning-tree vlan 10 priority"
+    ],
+    "inj_output": "spanning-tree mode pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance windowno spanning-tree vlan 10 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_MODE_20",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "default spanning-tree mode"
+    ],
+    "inj_output": "default spanning-tree mode\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_UNSET_COST_21",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree cost"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree cost"
+  },
+  {
+    "scenario_id": "STP_UNSET_COST_22",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree vlan 10 cost"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree vlan 10 cost"
+  },
+  {
+    "scenario_id": "STP_UNSET_COST_23",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree cost"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree cost"
+  },
+  {
+    "scenario_id": "STP_UNSET_COST_24",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree vlan 20 cost"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree vlan 20 cost"
+  },
+  {
+    "scenario_id": "STP_UNSET_PRIO_25",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree port-priority"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree port-priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_PRIO_26",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree vlan 10 port-priority"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree vlan 10 port-priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_PRIO_27",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree port-priority"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree port-priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_PRIO_28",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree vlan 100 port-priority"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree vlan 100 port-priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_BPDU_29",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree bpduguard enable"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree bpduguard enable"
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_BPDU_30",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree portfast bpduguard default"
+    ],
+    "inj_output": "no spanning-tree portfast bpduguard default"
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_ROOT_31",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree guard root"
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_ROOT_32",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree guard root"
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_LOOP_33",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree guard loop"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree guard loop"
+  },
+  {
+    "scenario_id": "STP_UNSET_FILTER_BPDU_34",
+    "status": "SYNTAX_ERROR",
+    "error_msg": "% Invalid input detected",
+    "adapted_cmds": [
+      "interface Ethernet1/0",
+      "no spanning-tree bpdufilter enable"
+    ],
+    "inj_output": "interface Ethernet1/0\n                                   ^\n% Invalid input detected at '^' marker.no spanning-tree bpdufilter enable\n                                   ^\n% Invalid input detected at '^' marker."
+  },
+  {
+    "scenario_id": "STP_UNSET_GUARD_LOOP_35",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree loopguard default"
+    ],
+    "inj_output": "no spanning-tree loopguard default"
+  },
+  {
+    "scenario_id": "STP_UNSET_PORTFAST_36",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree portfast"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree portfast"
+  },
+  {
+    "scenario_id": "STP_UNSET_PORTFAST_37",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree portfast default"
+    ],
+    "inj_output": "no spanning-tree portfast default"
+  },
+  {
+    "scenario_id": "STP_UNSET_PORTFAST_TRUNK_38",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "no spanning-tree portfast trunk"
+    ],
+    "inj_output": "interface Ethernet0/2\nno spanning-tree portfast trunk"
+  },
+  {
+    "scenario_id": "STP_UNSET_LOAD_BALANCING_39",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 10,20 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 10,20 priority"
+  },
+  {
+    "scenario_id": "STP_UNSET_LOAD_BALANCING_40",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 30,40 priority",
+      "no spanning-tree vlan 10,20 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 30,40 priority\nno spanning-tree vlan 10,20 priority"
+  },
+  {
+    "scenario_id": "TRUNK_MODE_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "switchport mode trunk"
+    ],
+    "inj_output": "interface Ethernet0/1\nswitchport mode trunk\nCommand rejected: An interface whose trunk encapsulation is \"Auto\" can not be configured to \"trunk\" mode."
+  },
+  {
+    "scenario_id": "TRUNK_ALLOWED_VLAN_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "switchport trunk allowed vlan 10,20,30"
+    ],
+    "inj_output": "interface Ethernet0/1\nswitchport trunk allowed vlan 10,20,30"
+  },
+  {
+    "scenario_id": "TRUNK_NATIVE_VLAN_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "switchport trunk native vlan 99"
+    ],
+    "inj_output": "interface Ethernet0/1\nswitchport trunk native vlan 99"
+  },
+  {
+    "scenario_id": "TRUNK_NONEGOTIATE_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "switchport nonegotiate"
+    ],
+    "inj_output": "interface Ethernet0/1\nswitchport nonegotiate\nCommand rejected: Conflict between 'nonegotiate' and 'dynamic' status on this interface: Et0/1"
+  },
+  {
+    "scenario_id": "UNSET_TRUNK_MODE_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "switchport mode access"
+    ],
+    "inj_output": "interface Ethernet0/1\nswitchport mode access"
+  },
+  {
+    "scenario_id": "UNSET_TRUNK_ALLOWED_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no switchport trunk allowed vlan"
+    ],
+    "inj_output": "interface Ethernet0/1\nno switchport trunk allowed vlan"
+  },
+  {
+    "scenario_id": "UNSET_TRUNK_NATIVE_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no switchport trunk native vlan"
+    ],
+    "inj_output": "interface Ethernet0/1\nno switchport trunk native vlan"
+  },
+  {
+    "scenario_id": "UNSET_TRUNK_NONEGOTIATE_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no switchport nonegotiate"
+    ],
+    "inj_output": "interface Ethernet0/1\nno switchport nonegotiate"
+  },
+  {
+    "scenario_id": "STP_PORT_EDGE_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree portfast"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree portfast\n%Warning: portfast should only be enabled on ports connected to a single\n host. Connecting hubs, concentrators, switches, bridges, etc... to this\n interface  when portfast is enabled, can cause temporary bridging loops.\n Use with CAUTION\n\n%Portfast has been configured on Ethernet0/3 but will only\n have effect when the interface is in a non-trunking mode."
+  },
+  {
+    "scenario_id": "STP_PORT_NETWORK_BA_02",
+    "status": "SYNTAX_ERROR",
+    "error_msg": "% Invalid input detected",
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree portfast network"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree portfast network\n                                           ^\n% Invalid input detected at '^' marker."
+  },
+  {
+    "scenario_id": "STP_PORT_NETWORK_GLOBAL_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree portfast default"
+    ],
+    "inj_output": "spanning-tree portfast default\n%Warning: this command enables portfast by default on all interfaces. You\n should now disable portfast explicitly on switched ports leading to hubs,\n switches and bridges as they may create temporary bridging loops."
+  },
+  {
+    "scenario_id": "STP_LINK_TYPE_P2P_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree link-type point-to-point"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree link-type point-to-point"
+  },
+  {
+    "scenario_id": "UNSET_PORT_EDGE_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree portfast"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree portfast"
+  },
+  {
+    "scenario_id": "UNSET_PORT_NETWORK_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree portfast network"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree portfast network"
+  },
+  {
+    "scenario_id": "UNSET_PORT_NETWORK_GLOBAL_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree portfast default"
+    ],
+    "inj_output": "no spanning-tree portfast default"
+  },
+  {
+    "scenario_id": "UNSET_LINK_TYPE_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree link-type"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree link-type"
+  },
+  {
+    "scenario_id": "PORT_CHANNEL_ON_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface range Ethernet0/1 - 2",
+      "channel-group 1 mode on"
+    ],
+    "inj_output": "interface range Ethernet0/1 - 2\nchannel-group 1 mode on\nCreating a port-channel interface Port-channel 1"
+  },
+  {
+    "scenario_id": "PORT_CHANNEL_LACP_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface range Ethernet0/1 - 2",
+      "channel-group 1 mode active"
+    ],
+    "inj_output": "interface range Ethernet0/1 - 2\nchannel-group 1 mode active\nCreating a port-channel interface Port-channel 1"
+  },
+  {
+    "scenario_id": "PORT_CHANNEL_STP_COST_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Port-channel 1",
+      "spanning-tree cost 9"
+    ],
+    "inj_output": "interface Port-channel 1\nspanning-tree cost 9"
+  },
+  {
+    "scenario_id": "PORT_CHANNEL_STP_PRIO_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Port-channel 1",
+      "spanning-tree port-priority 64"
+    ],
+    "inj_output": "interface Port-channel 1\nspanning-tree port-priority 64"
+  },
+  {
+    "scenario_id": "UNSET_PORT_CHANNEL_COST_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Port-channel 1",
+      "no spanning-tree cost"
+    ],
+    "inj_output": "interface Port-channel 1\nno spanning-tree cost"
+  },
+  {
+    "scenario_id": "UNSET_PORT_CHANNEL_PRIO_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Port-channel 1",
+      "no spanning-tree port-priority"
+    ],
+    "inj_output": "interface Port-channel 1\nno spanning-tree port-priority"
+  },
+  {
+    "scenario_id": "UNSET_PORT_CHANNEL_GROUP_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface range Ethernet0/1 - 2",
+      "no channel-group 1"
+    ],
+    "inj_output": "interface range Ethernet0/1 - 2\nno channel-group 1\nCommand Rejected: Et0/1 is not part of any channel-group\n% Range command terminated because it failed on Ethernet0/1"
+  },
+  {
+    "scenario_id": "UNSET_PORT_CHANNEL_IF_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no interface Port-channel 1"
+    ],
+    "inj_output": "no interface Port-channel 1"
+  },
+  {
+    "scenario_id": "MST_CONFIG_REGION_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "name REGION1",
+      "revision 1"
+    ],
+    "inj_output": "spanning-tree mst configuration\nname REGION1\nrevision 1"
+  },
+  {
+    "scenario_id": "MST_INSTANCE_MAP_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "instance 1 vlan 10,20"
+    ],
+    "inj_output": "spanning-tree mst configuration\ninstance 1 vlan 10,20"
+  },
+  {
+    "scenario_id": "MST_ROOT_PRIMARY_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst 1 root primary"
+    ],
+    "inj_output": "spanning-tree mst 1 root primary"
+  },
+  {
+    "scenario_id": "MST_PRIORITY_MANUAL_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst 2 priority 4096"
+    ],
+    "inj_output": "spanning-tree mst 2 priority 4096"
+  },
+  {
+    "scenario_id": "UNSET_MST_INSTANCE_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "no instance 1 vlan 10,20"
+    ],
+    "inj_output": "spanning-tree mst configuration\nno instance 1 vlan 10,20"
+  },
+  {
+    "scenario_id": "UNSET_MST_NAME_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "no name"
+    ],
+    "inj_output": "spanning-tree mst configuration\nno name"
+  },
+  {
+    "scenario_id": "UNSET_MST_PRIORITY_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree mst 2 priority"
+    ],
+    "inj_output": "no spanning-tree mst 2 priority"
+  },
+  {
+    "scenario_id": "UNSET_MST_MODE_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mode rapid-pvst"
+    ],
+    "inj_output": "spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window"
+  },
+  {
+    "scenario_id": "STP_PATHCOST_LONG_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree pathcost method long"
+    ],
+    "inj_output": "spanning-tree pathcost method long"
+  },
+  {
+    "scenario_id": "STP_ERRDISABLE_RECOVERY_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "errdisable recovery cause bpduguard"
+    ],
+    "inj_output": "errdisable recovery cause bpduguard"
+  },
+  {
+    "scenario_id": "STP_ERRDISABLE_INTERVAL_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "errdisable recovery interval 120"
+    ],
+    "inj_output": "errdisable recovery interval 120"
+  },
+  {
+    "scenario_id": "STP_MULTIHOP_COST_TUNING_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree cost 500"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree cost 500"
+  },
+  {
+    "scenario_id": "UNSET_PATHCOST_LONG_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree pathcost method short"
+    ],
+    "inj_output": "spanning-tree pathcost method short"
+  },
+  {
+    "scenario_id": "UNSET_ERRDISABLE_RECOVERY_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no errdisable recovery cause bpduguard"
+    ],
+    "inj_output": "no errdisable recovery cause bpduguard"
+  },
+  {
+    "scenario_id": "UNSET_ERRDISABLE_INTERVAL_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no errdisable recovery interval"
+    ],
+    "inj_output": "no errdisable recovery interval"
+  },
+  {
+    "scenario_id": "UNSET_MULTIHOP_COST_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree cost"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree cost"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_ROOT_PRIMARY_01",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 10 root primary"
+    ],
+    "inj_output": "spanning-tree vlan 10 root primary"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_ROOT_SECONDARY_02",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 10 root secondary"
+    ],
+    "inj_output": "spanning-tree vlan 10 root secondary"
+  },
+  {
+    "scenario_id": "MULTITIER_PER_VLAN_BALANCING_03",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree vlan 20 priority 4096"
+    ],
+    "inj_output": "spanning-tree vlan 20 priority 4096"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_INTERCONNECT_PO_04",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface range Ethernet0/0 - 1",
+      "channel-group 1 mode active"
+    ],
+    "inj_output": "interface range Ethernet0/0 - 1\nchannel-group 1 mode active\nCommand rejected: Et0/0 is a VRF-enabled port.\n% Range command terminated because it failed on Ethernet0/0"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_PO_COST_05",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Port-channel 1",
+      "spanning-tree cost 3"
+    ],
+    "inj_output": "interface Port-channel 1\nspanning-tree cost 3"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_UNSET_ROOT_06",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree vlan 10 priority"
+    ],
+    "inj_output": "no spanning-tree vlan 10 priority"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_UNSET_PO_07",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface range Ethernet0/0 - 1",
+      "no channel-group 1"
+    ],
+    "inj_output": "interface range Ethernet0/0 - 1\nno channel-group 1\nCommand Rejected: Et0/0 is not part of any channel-group\n% Range command terminated because it failed on Ethernet0/0"
+  },
+  {
+    "scenario_id": "MULTITIER_CORE_UNSET_PO_IF_08",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no interface Port-channel 1"
+    ],
+    "inj_output": "no interface Port-channel 1"
+  },
+  {
+    "scenario_id": "MULTITIER_ACC1_UPLINK_COST_TUNING_09",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "spanning-tree cost 500"
+    ],
+    "inj_output": "interface Ethernet0/1\nspanning-tree cost 500"
+  },
+  {
+    "scenario_id": "MULTITIER_DIST1_PORT_PRIO_10",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree port-priority 64"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree port-priority 64"
+  },
+  {
+    "scenario_id": "MULTITIER_PATHCOST_METHOD_LONG_11",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree pathcost method long"
+    ],
+    "inj_output": "spanning-tree pathcost method long"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_ACC1_COST_12",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/1",
+      "no spanning-tree cost"
+    ],
+    "inj_output": "interface Ethernet0/1\nno spanning-tree cost"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_DIST1_PRIO_13",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree port-priority"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree port-priority"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_PATHCOST_LONG_14",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree pathcost method short"
+    ],
+    "inj_output": "spanning-tree pathcost method short"
+  },
+  {
+    "scenario_id": "MULTITIER_DIST_INTERCONNECT_TRUNK_15",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "switchport mode trunk"
+    ],
+    "inj_output": "interface Ethernet0/2\nswitchport mode trunk\nCommand rejected: An interface whose trunk encapsulation is \"Auto\" can not be configured to \"trunk\" mode."
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_DIST_TRUNK_16",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/2",
+      "switchport mode access"
+    ],
+    "inj_output": "interface Ethernet0/2\nswitchport mode access"
+  },
+  {
+    "scenario_id": "MULTITIER_ROOT_GUARD_DIST_17",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/3\nspanning-tree guard root"
+  },
+  {
+    "scenario_id": "MULTITIER_LOOP_GUARD_DIST_18",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/0",
+      "spanning-tree guard loop"
+    ],
+    "inj_output": "interface Ethernet0/0\nspanning-tree guard loop"
+  },
+  {
+    "scenario_id": "MULTITIER_BPDU_GUARD_ACC_19",
+    "status": "SYNTAX_ERROR",
+    "error_msg": "% Invalid input detected",
+    "adapted_cmds": [
+      "interface Ethernet1/0",
+      "spanning-tree bpduguard enable"
+    ],
+    "inj_output": "interface Ethernet1/0\n                                   ^\n% Invalid input detected at '^' marker.spanning-tree bpduguard enable\n                                ^\n% Invalid input detected at '^' marker."
+  },
+  {
+    "scenario_id": "MULTITIER_TCN_SUPPRESS_EDGE_20",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree portfast default"
+    ],
+    "inj_output": "spanning-tree portfast default\n%Warning: this command enables portfast by default on all interfaces. You\n should now disable portfast explicitly on switched ports leading to hubs,\n switches and bridges as they may create temporary bridging loops."
+  },
+  {
+    "scenario_id": "MULTITIER_BRIDGE_ASSURANCE_CORE_21",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree portfast default"
+    ],
+    "inj_output": "spanning-tree portfast default\n%Warning: this command enables portfast by default on all interfaces. You\n should now disable portfast explicitly on switched ports leading to hubs,\n switches and bridges as they may create temporary bridging loops."
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_ROOT_GUARD_22",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/3",
+      "no spanning-tree guard root"
+    ],
+    "inj_output": "interface Ethernet0/3\nno spanning-tree guard root"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_LOOP_GUARD_23",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "interface Ethernet0/0",
+      "no spanning-tree guard loop"
+    ],
+    "inj_output": "interface Ethernet0/0\nno spanning-tree guard loop"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_TCN_EDGE_24",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "no spanning-tree portfast default"
+    ],
+    "inj_output": "no spanning-tree portfast default"
+  },
+  {
+    "scenario_id": "MULTITIER_MST_CORE_REGION_25",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "name ENTERPRISE-CORE",
+      "revision 2"
+    ],
+    "inj_output": "spanning-tree mst configuration\nname ENTERPRISE-CORE\nrevision 2"
+  },
+  {
+    "scenario_id": "MULTITIER_MST_INSTANCE_MAP_26",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "instance 1 vlan 10-20",
+      "instance 2 vlan 30-40"
+    ],
+    "inj_output": "spanning-tree mst configuration\ninstance 1 vlan 10-20\ninstance 2 vlan 30-40"
+  },
+  {
+    "scenario_id": "MULTITIER_MST_ROOT_PRIMARY_27",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst 1 root primary"
+    ],
+    "inj_output": "spanning-tree mst 1 root primary"
+  },
+  {
+    "scenario_id": "MULTITIER_MST_CORE2_INSTANCE2_28",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst 2 root primary"
+    ],
+    "inj_output": "spanning-tree mst 2 root primary"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_MST_MAP_29",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "no instance 1",
+      "no instance 2"
+    ],
+    "inj_output": "spanning-tree mst configuration\nno instance 1\nno instance 2"
+  },
+  {
+    "scenario_id": "MULTITIER_UNSET_MST_REGION_30",
+    "status": "SUCCESS",
+    "error_msg": null,
+    "adapted_cmds": [
+      "spanning-tree mst configuration",
+      "no name"
+    ],
+    "inj_output": "spanning-tree mst configuration\nno name"
+  }
+]

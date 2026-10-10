@@ -16,7 +16,7 @@ from rich.panel import Panel
 
 console = Console(highlight=False)
 
-def display_dataset(file_path: str = "data/grpo_dataset.jsonl", limit: int = 5, scenario_id: str = None):
+def display_dataset(file_path: str = "data/grpo/grpo_dataset_150_repaired.jsonl", limit: int = 5, scenario_id: str = None):
     path = Path(file_path)
     if not path.exists():
         console.print(f"[red]파일을 찾을 수 없습니다: {file_path}[/red]")
@@ -91,7 +91,7 @@ def display_dataset(file_path: str = "data/grpo_dataset.jsonl", limit: int = 5, 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="GRPO Dataset Pretty Viewer")
-    parser.add_argument("--file", default="data/grpo_dataset.jsonl", help="JSONL 파일 경로")
+    parser.add_argument("--file", default="data/grpo/grpo_dataset_150_repaired.jsonl", help="JSONL 파일 경로")
     parser.add_argument("--limit", type=int, default=5, help="출력할 시나리오 수 (0=전체)")
     parser.add_argument("--scenario", type=str, default=None, help="특정 시나리오 ID 필터")
     args = parser.parse_args()
