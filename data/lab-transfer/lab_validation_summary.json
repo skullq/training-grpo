@@ -1,0 +1,232 @@
+{
+  "suite_id": "L2_TRANSFER_V1",
+  "total": 20,
+  "passed": 19,
+  "failed": 0,
+  "blocked": 1,
+  "functional_verified": 16,
+  "configuration_only": 3,
+  "timestamp": "2026-10-11T04:27:59.999041+00:00",
+  "scenarios": {
+    "TRANSFER_001": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 10.74,
+      "reason": null
+    },
+    "TRANSFER_002": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.44,
+      "reason": null
+    },
+    "TRANSFER_003": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 10.68,
+      "reason": null
+    },
+    "TRANSFER_004": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.06,
+      "reason": null
+    },
+    "TRANSFER_005": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 10.88,
+      "reason": null
+    },
+    "TRANSFER_006": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.39,
+      "reason": null
+    },
+    "TRANSFER_007": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "not_run",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.61,
+      "reason": null
+    },
+    "TRANSFER_008": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.96,
+      "reason": null
+    },
+    "TRANSFER_009": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "not_run",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.95,
+      "reason": null
+    },
+    "TRANSFER_010": {
+      "final_status": "blocked",
+      "setup_status": "blocked",
+      "cli_status": "not_run",
+      "required_settings_status": "not_run",
+      "preservation_status": "not_run",
+      "functional_status": "not_run",
+      "rollback_status": "not_run",
+      "elapsed_seconds": 0.0,
+      "reason": "Preconditions not met: ['C Eth0/2 is not alternate for vlan 130: \\n\\n\\nlab1-sw3#show spanning-tree vlan 130 interface Ethernet0/2\\n\\nVlan                Role Sts Cost      Prio.Nbr Type\\n------------------- ---- --- --------- -------- --------------------------------\\nVLAN0130            Desg FWD 100       128.3    P2p \\nlab1-sw3#']"
+    },
+    "TRANSFER_011": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.71,
+      "reason": null
+    },
+    "TRANSFER_012": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 10.86,
+      "reason": null
+    },
+    "TRANSFER_013": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.38,
+      "reason": null
+    },
+    "TRANSFER_014": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 12.59,
+      "reason": null
+    },
+    "TRANSFER_015": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "not_run",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.23,
+      "reason": null
+    },
+    "TRANSFER_016": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.31,
+      "reason": null
+    },
+    "TRANSFER_017": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.92,
+      "reason": null
+    },
+    "TRANSFER_018": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.3,
+      "reason": null
+    },
+    "TRANSFER_019": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 13.9,
+      "reason": null
+    },
+    "TRANSFER_020": {
+      "final_status": "pass",
+      "setup_status": "pass",
+      "cli_status": "pass",
+      "required_settings_status": "pass",
+      "preservation_status": "pass",
+      "functional_status": "pass",
+      "rollback_status": "pass",
+      "elapsed_seconds": 11.9,
+      "reason": null
+    }
+  }
+}
