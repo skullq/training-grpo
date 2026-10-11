@@ -46,6 +46,12 @@ python evaluate_m4.py --engine mlx --adapter ./output/m4-mlx-qwen-lora
 
 ## 🛠️ 실장비 랩 검증 및 검사 도구
 
+신규 20문제의 초기 상태, 요구 설정, 실제 동작 및 원복 판정 기준은
+[랩 테스트 검증 항목](docs/LAB_TRANSFER_GUIDE.md)에 있습니다.
+다른 컴퓨터에서 이어갈 현재 상태, 배선, 20문제와 결과 양식은
+[단일 인계 문서](lab-pc.md)에 모았습니다.
+자료는 미승인·미검증 초안이며 모델 응답은 아직 생성하지 않았습니다.
+
 ```bash
 # 데이터셋 무결성 전수 검사 (태그, 분산, 포맷)
 uv run python scripts/verify_m4_datasets.py
