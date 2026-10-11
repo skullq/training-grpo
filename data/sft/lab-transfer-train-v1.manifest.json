@@ -1,0 +1,44 @@
+{
+  "dataset_id": "L2_TRANSFER_V1_SFT_REFERENCE",
+  "suite_id": "L2_TRANSFER_V1",
+  "source_files": {
+    "scenarios_v1.json": "d0af95f7e3519956ad710da7271af4a90c0ff2074372749e1047d7ab934a1cfd",
+    "lab_validation_summary.json": "1b91d21f71e272d1cd68465d04795c137add31ef9b239f2037d50779a2498de2"
+  },
+  "source_result_kind": "reference commands; no model responses",
+  "raw_device_evidence_included": false,
+  "included_count": 19,
+  "functional_verified_ids": [
+    "TRANSFER_001",
+    "TRANSFER_002",
+    "TRANSFER_003",
+    "TRANSFER_004",
+    "TRANSFER_005",
+    "TRANSFER_006",
+    "TRANSFER_008",
+    "TRANSFER_011",
+    "TRANSFER_012",
+    "TRANSFER_013",
+    "TRANSFER_014",
+    "TRANSFER_016",
+    "TRANSFER_017",
+    "TRANSFER_018",
+    "TRANSFER_019",
+    "TRANSFER_020"
+  ],
+  "configuration_only_ids": [
+    "TRANSFER_007",
+    "TRANSFER_009",
+    "TRANSFER_015"
+  ],
+  "excluded": [
+    {
+      "scenario_id": "TRANSFER_010",
+      "status": "blocked"
+    }
+  ],
+  "suite_approval_status": "not_reviewed",
+  "suite_metadata_lab_validation_status": "not_run",
+  "suite_metadata_model_response_status": "not_generated",
+  "output_file": "data/sft/lab-transfer-train-v1.jsonl"
+}
